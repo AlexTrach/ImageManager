@@ -1,0 +1,175 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using ImagesWcfServiceClient;
+
+namespace ImageManagerWpfClient
+{
+    public class ImageOperationsWindowViewModel : INotifyPropertyChanged, IDataErrorInfo
+    {
+        public ICommand AddTagToImageCommand { get; set; } = new AddTagToImageCommand();
+        public ICommand ChangeImageContentCommand { get; set; } = new ChangeImageContentCommand();
+        public ICommand AddImageCommand { get; set; } = new AddImageCommand();
+        public ICommand UpdateImageCommand { get; set; } = new UpdateImageCommand();
+        public ICommand DeleteImageCommand { get; set; } = new DeleteImageCommand();
+
+        public Image Image { get; private set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string ImageName
+        {
+            get
+            {
+                return Image.ImageName;
+            }
+            set
+            {
+                Image.ImageName = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(ImageName)));
+            }
+        }
+
+        public BitmapImage ImageContent
+        {
+            get
+            {
+                return Image.ImageContent;
+            }
+            set
+            {
+                Image.ImageContent = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(ImageContent)));
+            }
+        }
+
+        public ObservableCollection<Tag> Tags { get; set; } = new ObservableCollection<Tag>();
+
+        private bool _canAdd;
+        public bool CanAdd
+        {
+            get
+            {
+                return _canAdd;
+            }
+            private set
+            {
+                _canAdd = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CanAdd)));
+            }
+        }
+
+        private bool _canUpdate;
+        public bool CanUpdate
+        {
+            get
+            {
+                return _canUpdate;
+            }
+            private set
+            {
+                _canUpdate = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CanUpdate)));
+            }
+        }
+
+        private bool _canDelete;
+        public bool CanDelete
+        {
+            get
+            {
+                return _canDelete;
+            }
+            private set
+            {
+                _canDelete = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CanDelete)));
+            }
+        }
+
+        public ImageOperationsWindowViewModel(Image image)
+        {
+            Image = image;
+
+            foreach (Tag tag in Image.Tags)
+            {
+                Tags.Add(tag);
+            }
+
+            EnableRespectiveOperations();
+
+            Tags.Add(new Tag() { TagName = "Test"});
+            Tags.Add(new Tag() { TagName = "Test1111111111111111111111111111111111111" });
+            Tags.Add(new Tag() { TagName = "Test11111" });
+            Tags.Add(new Tag() { TagName = "1" });
+            Tags.Add(new Tag() { TagName = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" });
+        }
+
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
+
+        public string Error
+        {
+            get
+            {
+                return String.Empty;
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    case nameof(ImageName):
+                        if (!(ImageName.Length > 0 && ImageName.Length <= 100))
+                        {
+                            DisableRespectiveOperations();
+                            return "Name must not exceed 100 characters and must not be empty!";
+                        }
+                        else
+                        {
+                            EnableRespectiveOperations();
+                            return string.Empty;
+                        }
+                    default:
+                        return string.Empty;
+                }
+            }
+        }
+
+        private void EnableRespectiveOperations()
+        {
+            if (Image.Id == 0)
+            {
+                CanAdd = true;
+            }
+            else
+            {
+                CanUpdate = true;
+                CanDelete = true;
+            }
+        }
+
+        private void DisableRespectiveOperations()
+        {
+            if (Image.Id == 0)
+            {
+                CanAdd = false;
+            }
+            else
+            {
+                CanUpdate = false;
+            }
+        }
+    }
+}

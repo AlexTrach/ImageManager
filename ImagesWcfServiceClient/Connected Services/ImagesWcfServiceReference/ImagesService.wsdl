@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ImagesService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="NetTcpBinding_IImagesService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <msf:WindowsTransportSecurity xmlns:msf="http://schemas.microsoft.com/ws/2006/05/framing/policy">
+                  <msf:ProtectionLevel>EncryptAndSign</msf:ProtectionLevel>
+                </msf:WindowsTransportSecurity>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:8734/ImagesService?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8734/ImagesService?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8734/ImagesService?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ImagesWcfService" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IImagesService_Subscribe_InputMessage">
+    <wsdl:part name="parameters" element="tns:Subscribe" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetNextThumbnails_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNextThumbnails" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetNextThumbnails_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNextThumbnailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetNextThumbnailsWithSuchTags_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNextThumbnailsWithSuchTags" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetNextThumbnailsWithSuchTags_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNextThumbnailsWithSuchTagsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetFullSizeImage_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetFullSizeImage" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetFullSizeImage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetFullSizeImageResponse" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetAllTags_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTags" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetAllTags_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTagsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_AddImage_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddImage" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_UpdateImage_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateImage" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_DeleteImage_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteImage" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_AddTag_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddTag" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_UpdateTag_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateTag" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_DeleteTag_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteTag" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_Unsubscribe_InputMessage">
+    <wsdl:part name="parameters" element="tns:Unsubscribe" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_NotifyAboutDatabaseUpdate_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyAboutDatabaseUpdate" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="true" name="IImagesService">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Subscribe">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/Subscribe" message="tns:IImagesService_Subscribe_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetNextThumbnails">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetNextThumbnails" message="tns:IImagesService_GetNextThumbnails_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetNextThumbnailsResponse" message="tns:IImagesService_GetNextThumbnails_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetNextThumbnailsWithSuchTags">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetNextThumbnailsWithSuchTags" message="tns:IImagesService_GetNextThumbnailsWithSuchTags_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetNextThumbnailsWithSuchTagsResponse" message="tns:IImagesService_GetNextThumbnailsWithSuchTags_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetFullSizeImage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetFullSizeImage" message="tns:IImagesService_GetFullSizeImage_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetFullSizeImageResponse" message="tns:IImagesService_GetFullSizeImage_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetAllTags">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetAllTags" message="tns:IImagesService_GetAllTags_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetAllTagsResponse" message="tns:IImagesService_GetAllTags_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="AddImage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/AddImage" message="tns:IImagesService_AddImage_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="UpdateImage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/UpdateImage" message="tns:IImagesService_UpdateImage_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="DeleteImage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/DeleteImage" message="tns:IImagesService_DeleteImage_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="AddTag">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/AddTag" message="tns:IImagesService_AddTag_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="UpdateTag">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/UpdateTag" message="tns:IImagesService_UpdateTag_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="DeleteTag">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/DeleteTag" message="tns:IImagesService_DeleteTag_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="true" name="Unsubscribe">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/Unsubscribe" message="tns:IImagesService_Unsubscribe_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="NotifyAboutDatabaseUpdate">
+      <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/NotifyAboutDatabaseUpdate" message="tns:IImagesService_NotifyAboutDatabaseUpdate_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NetTcpBinding_IImagesService" type="tns:IImagesService">
+    <wsp:PolicyReference URI="#NetTcpBinding_IImagesService_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="Subscribe">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/Subscribe" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="GetNextThumbnails">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/GetNextThumbnails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNextThumbnailsWithSuchTags">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/GetNextThumbnailsWithSuchTags" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFullSizeImage">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/GetFullSizeImage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTags">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/GetAllTags" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddImage">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/AddImage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateImage">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/UpdateImage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteImage">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/DeleteImage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="AddTag">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/AddTag" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateTag">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/UpdateTag" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteTag">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/DeleteTag" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="Unsubscribe">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/Unsubscribe" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyAboutDatabaseUpdate">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/NotifyAboutDatabaseUpdate" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ImagesService">
+    <wsdl:port name="NetTcpBinding_IImagesService" binding="tns:NetTcpBinding_IImagesService">
+      <soap12:address location="net.tcp://localhost:8733/ImagesService" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:8733/ImagesService</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Upn>OTrach@lan.ad</Upn>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

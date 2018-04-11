@@ -1,0 +1,95 @@
+﻿<Application x:Class="ImageManagerWpfClient.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ImageManagerWpfClient"
+             StartupUri="Views\MainWindow.xaml" Exit="Application_Exit">
+    <Application.Resources>
+        
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Label Background="{TemplateBinding Property=Background}"
+                               HorizontalContentAlignment="Center"
+                               Foreground="{TemplateBinding Property=Foreground}"
+                               Content="{TemplateBinding Property=Content}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+            <Setter Property="Content" Value="Load more"/>
+            <Setter Property="Background" Value="Orange"/>
+            <Setter Property="Foreground" Value="White"/>
+
+            <Style.Triggers>
+                
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="DarkOrange"/>
+                </Trigger>
+                
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="OrangeRed"/>
+                </Trigger>
+                
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="PeachPuff"/>
+                </Trigger>
+                
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="LoadMoreButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+        
+        <Style x:Key="ThumbnailsItemsControlStyle" TargetType="ItemsControl">
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style>
+                        
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            
+        </Style>
+
+        <Style x:Key="ErrorTemplateForTextBoxStyle" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" 
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, 
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+    </Application.Resources>
+</Application>
