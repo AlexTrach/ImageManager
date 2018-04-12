@@ -104,16 +104,20 @@ namespace ImageManagerWpfClient
                 Tags.Add(tag);
             }
 
+            foreach (Tag tag in ServiceClientWrapper.Instance.GetAllTags())
+            {
+                if ((from imageTag in Tags
+                     where imageTag.Id == tag.Id
+                     select imageTag).Count() == 0)
+                {
+                    AvailableTags.Add(tag);
+                }
+            }
+
             AddTagToImageCommand = new AddTagToImageCommand(Tags, AvailableTags);
             DeleteTagFromImageCommand = new DeleteTagFromImageCommand(Tags, AvailableTags);
 
             EnableRespectiveOperations();
-
-            AvailableTags.Add(new Tag() { TagName = "Test"});
-            AvailableTags.Add(new Tag() { TagName = "Test1111111111111111111111111111111111111" });
-            AvailableTags.Add(new Tag() { TagName = "Test11111" });
-            AvailableTags.Add(new Tag() { TagName = "1" });
-            AvailableTags.Add(new Tag() { TagName = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" });
         }
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)

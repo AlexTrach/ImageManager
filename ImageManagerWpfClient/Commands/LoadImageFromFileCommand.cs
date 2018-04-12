@@ -27,11 +27,11 @@ namespace ImageManagerWpfClient
             bool? result = dialog.ShowDialog();
             if (result == true)
             {
-                BitmapImage image = new BitmapImage(new Uri(dialog.FileName));
+                BitmapImage bitmapImage = new BitmapImage(new Uri(dialog.FileName));
                 ImageOperationsWindowViewModel viewModel = new ImageOperationsWindowViewModel(new Image()
                 {
-                    ImageContent = image,
-                    ImageName = Path.GetFileNameWithoutExtension(dialog.FileName)
+                    ImageContent = bitmapImage,
+                    ImageName = Path.GetFileNameWithoutExtension(dialog.FileName),
                 });
                 ImageOperationsWindow imageOperationsWindow = new ImageOperationsWindow(viewModel);
                 imageOperationsWindow.ShowDialog();
