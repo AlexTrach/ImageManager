@@ -57,6 +57,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\AvailableTagsEditingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ImageOperationsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -65,6 +69,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="ViewModels\AvailableTagsEditingWindowViewModel.cs" />
+    <Compile Include="Views\AvailableTagsEditingWindow.xaml.cs">
+      <DependentUpon>AvailableTagsEditingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands\AddImageCommand.cs" />
     <Compile Include="Commands\AddTagToImageCommand.cs" />
     <Compile Include="App.xaml.cs">
@@ -78,6 +86,7 @@
     <Compile Include="Commands\DeleteImageCommand.cs" />
     <Compile Include="Commands\UpdateImageCommand.cs" />
     <Compile Include="Commands\ShutdownApplicationCommand.cs" />
+    <Compile Include="Commands\DeleteTagFromImageCommand.cs" />
     <Compile Include="ViewModels\ImageOperationsWindowViewModel.cs" />
     <Compile Include="Views\ImageOperationsWindow.xaml.cs">
       <DependentUpon>ImageOperationsWindow.xaml</DependentUpon>
@@ -113,7 +122,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icon.ico" />

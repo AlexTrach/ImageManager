@@ -9,14 +9,14 @@ using System.Collections.ObjectModel;
 
 namespace ImageManagerWpfClient
 {
-    class AddTagToImageCommand : ICommand
+    class DeleteTagFromImageCommand : ICommand
     {
         public ObservableCollection<Tag> Tags { get; set; }
         public ObservableCollection<Tag> AvailableTags { get; set; }
 
         public event EventHandler CanExecuteChanged;
 
-        public AddTagToImageCommand(ObservableCollection<Tag> tags, ObservableCollection<Tag> availableTags)
+        public DeleteTagFromImageCommand(ObservableCollection<Tag> tags, ObservableCollection<Tag> availableTags)
         {
             Tags = tags;
             AvailableTags = availableTags;
@@ -29,11 +29,11 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            Tag tagToAdd = (Tag) parameter;
+            Tag tagToDelete = (Tag) parameter;
 
-            Tags.Add(tagToAdd);
+            Tags.Remove(tagToDelete);
 
-            AvailableTags.Remove(tagToAdd);
+            AvailableTags.Add(tagToDelete);
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

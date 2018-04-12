@@ -87,7 +87,12 @@
                                    Foreground="White"
                                    Content="{Binding Path=TagName}"/>
 
-                            <Button Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Button Grid.Column="2" 
+                                    HorizontalAlignment="Left" 
+                                    VerticalAlignment="Center" 
+                                    CommandParameter="{Binding}"
+                                    Command="{Binding Path=DataContext.DeleteTagFromImageCommand, 
+                                                      RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                                 <Button.Style>
                                     <Style TargetType="Button">
 
@@ -199,21 +204,30 @@
                           ItemsSource="{Binding Path=Tags}"/>
 
             <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource LabelStyle}" Content="Available tags:"/>
-            <ComboBox Grid.Column="1"
+            <ComboBox x:Name="AvailableTagsComboBox"
+                      Grid.Column="1"
                       Grid.Row="2"
                       Margin="0,2,2,2"
                       Background="White"
                       Foreground="Orange"
-                      IsEditable="True"
-                      ItemsSource="{Binding Path=Tags}"
+                      ItemsSource="{Binding Path=AvailableTags}"
                       DisplayMemberPath="TagName"/>
             <Button Grid.Column="2"
                     Grid.Row="2"
                     Margin="2,2,4,2"
-                    Style="{StaticResource ActionButtonStyle}"
                     Content="Add tag"
-                    CommandParameter="{Binding}"
-                    Command="{Binding Path=AddTagToImageCommand}"/>
+                    CommandParameter="{Binding ElementName=AvailableTagsComboBox, Path=SelectedValue}"
+                    Command="{Binding Path=AddTagToImageCommand}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=AvailableTagsComboBox, Path=SelectedItem}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
 
         </Grid>
 

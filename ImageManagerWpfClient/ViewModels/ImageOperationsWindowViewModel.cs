@@ -13,7 +13,8 @@ namespace ImageManagerWpfClient
 {
     public class ImageOperationsWindowViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
-        public ICommand AddTagToImageCommand { get; set; } = new AddTagToImageCommand();
+        public ICommand AddTagToImageCommand { get; set; }
+        public ICommand DeleteTagFromImageCommand { get; set; }
         public ICommand ChangeImageContentCommand { get; set; } = new ChangeImageContentCommand();
         public ICommand AddImageCommand { get; set; } = new AddImageCommand();
         public ICommand UpdateImageCommand { get; set; } = new UpdateImageCommand();
@@ -50,6 +51,7 @@ namespace ImageManagerWpfClient
         }
 
         public ObservableCollection<Tag> Tags { get; set; } = new ObservableCollection<Tag>();
+        public ObservableCollection<Tag> AvailableTags { get; set; } = new ObservableCollection<Tag>();
 
         private bool _canAdd;
         public bool CanAdd
@@ -102,13 +104,16 @@ namespace ImageManagerWpfClient
                 Tags.Add(tag);
             }
 
+            AddTagToImageCommand = new AddTagToImageCommand(Tags, AvailableTags);
+            DeleteTagFromImageCommand = new DeleteTagFromImageCommand(Tags, AvailableTags);
+
             EnableRespectiveOperations();
 
-            Tags.Add(new Tag() { TagName = "Test"});
-            Tags.Add(new Tag() { TagName = "Test1111111111111111111111111111111111111" });
-            Tags.Add(new Tag() { TagName = "Test11111" });
-            Tags.Add(new Tag() { TagName = "1" });
-            Tags.Add(new Tag() { TagName = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" });
+            AvailableTags.Add(new Tag() { TagName = "Test"});
+            AvailableTags.Add(new Tag() { TagName = "Test1111111111111111111111111111111111111" });
+            AvailableTags.Add(new Tag() { TagName = "Test11111" });
+            AvailableTags.Add(new Tag() { TagName = "1" });
+            AvailableTags.Add(new Tag() { TagName = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" });
         }
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)

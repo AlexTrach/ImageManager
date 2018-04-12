@@ -21,7 +21,7 @@ namespace ImageManagerWpfClient
         {
             ImageOperationsWindowViewModel viewModel = (ImageOperationsWindowViewModel) parameter;
 
-            //ServiceClientWrapper.Instance.AddImage(viewModel.Image);
+            ServiceClientWrapper.Instance.AddImage(viewModel.Image);
         }
 
         protected void OnCanExecuteChanged(EventArgs e)
