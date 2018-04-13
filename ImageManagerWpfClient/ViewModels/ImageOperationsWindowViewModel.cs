@@ -104,7 +104,7 @@ namespace ImageManagerWpfClient
                 Tags.Add(tag);
             }
 
-            foreach (Tag tag in ServiceClientWrapper.Instance.GetAllTags())
+            foreach (Tag tag in AvailableTagsLocalStorage.Instance.AvailableTags)
             {
                 if ((from imageTag in Tags
                      where imageTag.Id == tag.Id

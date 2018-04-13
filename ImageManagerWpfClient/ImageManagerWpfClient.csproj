@@ -69,6 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Models\AvailableTagsLocalStorage.cs" />
     <Compile Include="ViewModels\AvailableTagsEditingWindowViewModel.cs" />
     <Compile Include="Views\AvailableTagsEditingWindow.xaml.cs">
       <DependentUpon>AvailableTagsEditingWindow.xaml</DependentUpon>

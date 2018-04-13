@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Media.Imaging;
 using ImagesWcfServiceClient;
+using System.Windows;
 
 namespace ImageManagerWpfClient
 {
@@ -34,6 +35,8 @@ namespace ImageManagerWpfClient
                     ImageName = Path.GetFileNameWithoutExtension(dialog.FileName),
                 });
                 ImageOperationsWindow imageOperationsWindow = new ImageOperationsWindow(viewModel);
+
+                Application.Current.MainWindow = imageOperationsWindow;
                 imageOperationsWindow.ShowDialog();
             }
         }

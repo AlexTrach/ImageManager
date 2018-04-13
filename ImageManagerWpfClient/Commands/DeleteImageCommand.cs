@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows;
 
 namespace ImageManagerWpfClient
 {
@@ -20,7 +21,10 @@ namespace ImageManagerWpfClient
         {
             ImageOperationsWindowViewModel viewModel = (ImageOperationsWindowViewModel) parameter;
 
-            ServiceClientWrapper.Instance.DeleteImage(viewModel.Image);
+            Application.Current.MainWindow.Close();
+            Application.Current.MainWindow = Application.Current.Windows[0];
+
+            Task.Factory.StartNew(() => ServiceClientWrapper.Instance.DeleteImage(viewModel.Image));
         }
 
         protected void OnCanExecuteChanged(EventArgs e)
