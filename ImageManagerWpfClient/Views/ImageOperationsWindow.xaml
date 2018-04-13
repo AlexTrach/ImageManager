@@ -90,22 +90,20 @@
                             <Button Grid.Column="2" 
                                     HorizontalAlignment="Left" 
                                     VerticalAlignment="Center" 
+                                    Foreground="White"
                                     CommandParameter="{Binding}"
                                     Command="{Binding Path=DataContext.DeleteTagFromImageCommand, 
                                                       RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
-                                <Button.Style>
-                                    <Style TargetType="Button">
 
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate>
-                                                    <Grid>
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Grid>
 
-                                                        <Ellipse Width="18" 
+                                            <Ellipse Width="18" 
                                                                  Height="18" 
                                                                  Fill="{TemplateBinding Property=Background}"/>
 
-                                                        <Line Stroke="{TemplateBinding Property=Foreground}" 
+                                            <Line Stroke="{TemplateBinding Property=Foreground}" 
                                                               StrokeThickness="1"
                                                               X1="0"
                                                               Y1="0"
@@ -114,7 +112,7 @@
                                                               HorizontalAlignment="Center"
                                                               VerticalAlignment="Center"/>
 
-                                                        <Line Stroke="{TemplateBinding Property=Foreground}" 
+                                            <Line Stroke="{TemplateBinding Property=Foreground}" 
                                                               StrokeThickness="1"
                                                               X1="0"
                                                               Y1="10"
@@ -123,13 +121,14 @@
                                                               HorizontalAlignment="Center"
                                                               VerticalAlignment="Center"/>
 
-                                                    </Grid>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                
+                                <Button.Style>
+                                    <Style TargetType="Button">
 
                                         <Setter Property="Background" Value="Transparent"/>
-                                        <Setter Property="Foreground" Value="White"/>
 
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
@@ -152,12 +151,6 @@
         <Style x:Key="OperationButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Width" Value="120"/>
-        </Style>
-
-        <Style x:Key="LabelStyle" TargetType="Label">
-            <Setter Property="Foreground" Value="Orange"/>
-            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
     </Window.Resources>
@@ -191,7 +184,6 @@
                      Grid.ColumnSpan="2"
                      Grid.Row="0" 
                      Margin="0,4,4,2" 
-                     Foreground="Orange"
                      Style="{StaticResource ErrorTemplateForTextBoxStyle}"
                      Text="{Binding Path=ImageName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -264,4 +256,5 @@
         </ScrollViewer>
 
     </DockPanel>
+    
 </Window>

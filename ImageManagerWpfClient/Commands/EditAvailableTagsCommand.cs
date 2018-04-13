@@ -19,7 +19,9 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            throw new NotImplementedException();
+            AvailableTagsEditingWindow availableTagsEditingWindow = new AvailableTagsEditingWindow();
+
+            availableTagsEditingWindow.ShowDialog();
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

@@ -21,13 +21,6 @@ namespace ImageManagerWpfClient
 
         public ObservableCollection<Image> Thumbnails { get; set; } = new ObservableCollection<Image>();
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChanged(this, e);
-        }
-
         private string _status = "Ready.";
         public string Status
         {
@@ -40,6 +33,13 @@ namespace ImageManagerWpfClient
                 _status = value;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(Status)));
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
         }
     }
 }

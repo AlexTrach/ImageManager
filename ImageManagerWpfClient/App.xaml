@@ -81,7 +81,17 @@
             
         </Style>
 
-        <Style x:Key="ErrorTemplateForTextBoxStyle" TargetType="TextBox">
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="Orange"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Foreground" Value="Orange"/>
+        </Style>
+
+        <Style x:Key="ErrorTemplateForTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
                     <Setter Property="ToolTip" 

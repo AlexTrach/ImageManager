@@ -20,12 +20,7 @@ namespace ImageManagerWpfClient
 
         private AvailableTagsLocalStorage()
         {
-            AvailableTags = new List<Tag>(); //ServiceClientWrapper.Instance.GetAllTags();
-            AvailableTags.Add(new Tag() { TagName = "Test" });
-            AvailableTags.Add(new Tag() { TagName = "1" });
-            AvailableTags.Add(new Tag() { TagName = "Test111111111111" });
-            AvailableTags.Add(new Tag() { TagName = "11111111111111111111111111111111111111111111111111" });
-            AvailableTags.Add(new Tag() { TagName = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" });
+            AvailableTags = ServiceClientWrapper.Instance.GetAllTags();
         }
     }
 }

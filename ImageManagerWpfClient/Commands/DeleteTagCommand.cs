@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Microsoft.Win32;
-using System.Windows.Media.Imaging;
 
 namespace ImageManagerWpfClient
 {
-    class ChangeImageContentCommand : ICommand
+    class DeleteTagCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
@@ -20,15 +18,7 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            ImageOperationsWindowViewModel viewModel = (ImageOperationsWindowViewModel) parameter;
-
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Image files | *.jpeg;*.jpg;*.png";
-            bool? result = dialog.ShowDialog();
-            if (result == true)
-            {
-                viewModel.ImageContent = new BitmapImage(new Uri(dialog.FileName));
-            }
+            throw new NotImplementedException();
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

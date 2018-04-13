@@ -13,9 +13,11 @@ namespace ImageManagerWpfClient
 {
     public class ImageOperationsWindowViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
+        public ICommand ChangeImageContentCommand { get; set; } = new ChangeImageContentCommand();
+
         public ICommand AddTagToImageCommand { get; set; }
         public ICommand DeleteTagFromImageCommand { get; set; }
-        public ICommand ChangeImageContentCommand { get; set; } = new ChangeImageContentCommand();
+
         public ICommand AddImageCommand { get; set; } = new AddImageCommand();
         public ICommand UpdateImageCommand { get; set; } = new UpdateImageCommand();
         public ICommand DeleteImageCommand { get; set; } = new DeleteImageCommand();
