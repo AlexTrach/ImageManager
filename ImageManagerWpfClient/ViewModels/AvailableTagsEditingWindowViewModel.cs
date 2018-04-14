@@ -6,29 +6,63 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ImagesWcfServiceClient;
+using ImagesWcfServiceClient.Models;
 
 namespace ImageManagerWpfClient
 {
-    class AvailableTagsEditingWindowViewModel : IDataErrorInfo
+    class AvailableTagsEditingWindowViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         public ICommand AddTagCommand { get; set; } = new AddTagCommand();
         public ICommand UpdateTagCommand { get; set; } = new UpdateTagCommand();
-        public ICommand DeleteTagCommand { get; set; } = new DeleteTagCommand();
+        public ICommand DeleteTagCommand { get; set; }
+
+        private string _tagNameToAdd;
+        public string TagNameToAdd
+        {
+            get
+            {
+                return _tagNameToAdd;
+            }
+            set
+            {
+                _tagNameToAdd = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(TagNameToAdd)));
+            }
+        }
+
+        private string _tagNameToUpdate;
+        public string TagNameToUpdate
+        {
+            get
+            {
+                return _tagNameToUpdate;
+            }
+            set
+            {
+                _tagNameToUpdate = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(TagNameToUpdate)));
+            }
+        }   
 
         public ObservableCollection<Tag> AvailableTags { get; set; } = new ObservableCollection<Tag>();
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public AvailableTagsEditingWindowViewModel()
         {
+            DeleteTagCommand = new DeleteTagCommand(AvailableTags);
+            TagNameToAdd = string.Empty;
+            TagNameToUpdate = string.Empty;
+
             foreach (Tag tag in AvailableTagsLocalStorage.Instance.AvailableTags)
             {
                 AvailableTags.Add(tag);
             }
-            AvailableTags.Add(new Tag { TagName = "Test" });
-            AvailableTags.Add(new Tag { TagName = "1" });
-            AvailableTags.Add(new Tag { TagName = "Test11111" });
-            AvailableTags.Add(new Tag { TagName = "11111111111111111111111111111111111111111111111111" });
-            AvailableTags.Add(new Tag { TagName = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" });
+        }
+
+        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
         }
 
         public string Error
@@ -43,8 +77,58 @@ namespace ImageManagerWpfClient
         {
             get
             {
-                return string.Empty;
+                switch (columnName)
+                {
+                    case nameof(TagNameToAdd):
+                        return ValidateTagName(TagNameToAdd);
+                    case nameof(TagNameToUpdate):
+                        return ValidateTagName(TagNameToUpdate);
+                    default:
+                        return string.Empty;
+                }
             }
+        }
+
+        private string ValidateTagName(string tagName)
+        {
+            string error = string.Empty;
+
+            if (ValidateTagNameLength(tagName))
+            {
+                if (ValidateTagNameUniqueness(tagName))
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    error = "Name must be unique!";
+                }
+            }
+            else
+            {
+                error = "Name must not exceed 100 characters and must not be empty!";
+            }
+
+            return error;
+        }
+
+        private bool ValidateTagNameLength(string tagName)
+        {
+            if (tagName.Length > 0 && tagName.Length <= 100)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool ValidateTagNameUniqueness(string tagName)
+        {
+            return (from tag in AvailableTags
+                    where tag.TagName == tagName
+                    select tag).Count() == 0;
         }
     }
 }

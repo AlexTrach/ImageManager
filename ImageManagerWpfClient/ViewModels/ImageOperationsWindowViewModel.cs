@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ImagesWcfServiceClient;
+using ImagesWcfServiceClient.Models;
 
 namespace ImageManagerWpfClient
 {

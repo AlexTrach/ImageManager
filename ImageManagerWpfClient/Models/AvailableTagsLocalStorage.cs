@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ImagesWcfServiceClient;
+using ImagesWcfServiceClient.Models;
 
 namespace ImageManagerWpfClient
 {
@@ -20,7 +20,12 @@ namespace ImageManagerWpfClient
 
         private AvailableTagsLocalStorage()
         {
-            AvailableTags = ServiceClientWrapper.Instance.GetAllTags();
+            AvailableTags = new List<Tag>();//ServiceClientWrapper.Instance.GetAllTags();
+            AvailableTags.Add(new Tag { TagName = "Test" });
+            AvailableTags.Add(new Tag { TagName = "1" });
+            AvailableTags.Add(new Tag { TagName = "Test11111" });
+            AvailableTags.Add(new Tag { TagName = "11111111111111111111111111111111111111111111111111" });
+            AvailableTags.Add(new Tag { TagName = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" });
         }
     }
 }

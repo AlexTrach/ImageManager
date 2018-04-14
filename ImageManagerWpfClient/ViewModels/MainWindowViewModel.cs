@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using ImagesWcfServiceClient;
+using ImagesWcfServiceClient.Models;
 using System.ComponentModel;
 
 namespace ImageManagerWpfClient

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ImagesWcfServiceClient.Models;
 
 namespace ImageManagerWpfClient
 {
@@ -18,7 +19,7 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            throw new NotImplementedException();
+            
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Media.Imaging;
+using ImagesWcfServiceClient.Models;
 
-namespace ImagesWcfServiceClient
+namespace ImagesWcfServiceClient.Utilities
 {
     static class Utility
     {

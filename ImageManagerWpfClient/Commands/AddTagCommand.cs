@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ImagesWcfServiceClient.Models;
 
 namespace ImageManagerWpfClient
 {
@@ -18,7 +19,13 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            throw new NotImplementedException();
+            AvailableTagsEditingWindowViewModel viewModel = (AvailableTagsEditingWindowViewModel) parameter;
+
+            Tag tagToAdd = new Tag { TagName = viewModel.TagNameToAdd };
+
+            viewModel.AvailableTags.Add(tagToAdd);
+            //AvailableTagsLocalStorage.Instance.AvailableTags.Add(tagToAdd);
+            //ServiceClientWrapper.Instance.AddTag(tagToAdd);
         }
 
         protected void OnCanExecuteChanged(EventArgs e)
