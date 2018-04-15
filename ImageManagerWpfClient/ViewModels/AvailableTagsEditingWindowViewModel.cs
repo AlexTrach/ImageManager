@@ -13,6 +13,7 @@ namespace ImageManagerWpfClient
     class AvailableTagsEditingWindowViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         public ICommand AddTagCommand { get; set; } = new AddTagCommand();
+        public ICommand SelectTagToUpdateCommand { get; set; }
         public ICommand UpdateTagCommand { get; set; } = new UpdateTagCommand();
         public ICommand DeleteTagCommand { get; set; }
 
@@ -30,6 +31,48 @@ namespace ImageManagerWpfClient
             }
         }
 
+        private bool _canAddTag;
+        public bool CanAddTag
+        {
+            get
+            {
+                return _canAddTag;
+            }
+            set
+            {
+                _canAddTag = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CanAddTag)));
+            }
+        }
+
+        private Tag _tagToUpdate;
+        public Tag TagToUpdate
+        {
+            get
+            {
+                return _tagToUpdate;
+            }
+            set
+            {
+                _tagToUpdate = value;
+                TagNameToUpdate = _tagToUpdate.TagName;
+            }
+        }
+
+        private bool _canUpdateTag;
+        public bool CanUpdateTag
+        {
+            get
+            {
+                return _canUpdateTag;
+            }
+            set
+            {
+                _canUpdateTag = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CanUpdateTag)));
+            }
+        }
+
         private string _tagNameToUpdate;
         public string TagNameToUpdate
         {
@@ -42,7 +85,21 @@ namespace ImageManagerWpfClient
                 _tagNameToUpdate = value;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(TagNameToUpdate)));
             }
-        }   
+        }
+
+        private bool _canEnterTagNameToUpdate;
+        public bool CanEnterTagNameToUpdate
+        {
+            get
+            {
+                return _canEnterTagNameToUpdate;
+            }
+            set
+            {
+                _canEnterTagNameToUpdate = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CanEnterTagNameToUpdate)));
+            }
+        }
 
         public ObservableCollection<Tag> AvailableTags { get; set; } = new ObservableCollection<Tag>();
 
@@ -50,11 +107,10 @@ namespace ImageManagerWpfClient
 
         public AvailableTagsEditingWindowViewModel()
         {
-            DeleteTagCommand = new DeleteTagCommand(AvailableTags);
-            TagNameToAdd = string.Empty;
-            TagNameToUpdate = string.Empty;
+            SelectTagToUpdateCommand = new SelectTagToUpdateCommand(this);
+            DeleteTagCommand = new DeleteTagCommand(this);
 
-            foreach (Tag tag in AvailableTagsLocalStorage.Instance.AvailableTags)
+            foreach (Tag tag in ServiceClientWrapper.Instance.GetAllTags())
             {
                 AvailableTags.Add(tag);
             }
@@ -77,12 +133,33 @@ namespace ImageManagerWpfClient
         {
             get
             {
+                string error;
                 switch (columnName)
                 {
                     case nameof(TagNameToAdd):
-                        return ValidateTagName(TagNameToAdd);
+                        error = ValidateTagName(TagNameToAdd);
+                        if (error == string.Empty)
+                        {
+                            CanAddTag = true;
+                            return error;
+                        }
+                        else
+                        {
+                            CanAddTag = false;
+                            return error;
+                        }
                     case nameof(TagNameToUpdate):
-                        return ValidateTagName(TagNameToUpdate);
+                        error = ValidateTagName(TagNameToUpdate);
+                        if (error == string.Empty)
+                        {
+                            CanUpdateTag = true;
+                            return error;
+                        }
+                        else
+                        {
+                            CanUpdateTag = false;
+                            return error;
+                        }
                     default:
                         return string.Empty;
                 }
@@ -93,22 +170,25 @@ namespace ImageManagerWpfClient
         {
             string error = string.Empty;
 
-            if (ValidateTagNameLength(tagName))
+            if(tagName != null)
             {
-                if (ValidateTagNameUniqueness(tagName))
+                if (ValidateTagNameLength(tagName))
                 {
-                    return string.Empty;
+                    if (ValidateTagNameUniqueness(tagName))
+                    {
+                        return string.Empty;
+                    }
+                    else
+                    {
+                        error = "Name must be unique!";
+                    }
                 }
                 else
                 {
-                    error = "Name must be unique!";
+                    error = "Name must not exceed 100 characters and must not be empty!";
                 }
             }
-            else
-            {
-                error = "Name must not exceed 100 characters and must not be empty!";
-            }
-
+            
             return error;
         }
 

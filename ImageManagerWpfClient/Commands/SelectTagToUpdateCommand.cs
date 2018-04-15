@@ -8,9 +8,16 @@ using ImagesWcfServiceClient.Models;
 
 namespace ImageManagerWpfClient
 {
-    class AddTagCommand : ICommand
+    class SelectTagToUpdateCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
+
+        public AvailableTagsEditingWindowViewModel ViewModel { get; set; }
+
+        public SelectTagToUpdateCommand(AvailableTagsEditingWindowViewModel viewModel)
+        {
+            ViewModel = viewModel;
+        }
 
         public bool CanExecute(object parameter)
         {
@@ -19,15 +26,10 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            AvailableTagsEditingWindowViewModel viewModel = (AvailableTagsEditingWindowViewModel) parameter;
+            Tag tagToUpdate = (Tag) parameter;
 
-            Tag tagToAdd = new Tag { TagName = viewModel.TagNameToAdd };
-
-            viewModel.AvailableTags.Add(tagToAdd);
-
-            viewModel.TagNameToAdd = null;
-
-            //ServiceClientWrapper.Instance.AddTag(tagToAdd);
+            ViewModel.TagToUpdate = tagToUpdate;
+            ViewModel.CanEnterTagNameToUpdate = true;
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

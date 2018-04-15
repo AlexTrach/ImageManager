@@ -106,7 +106,7 @@ namespace ImageManagerWpfClient
                 Tags.Add(tag);
             }
 
-            foreach (Tag tag in AvailableTagsLocalStorage.Instance.AvailableTags)
+            foreach (Tag tag in ServiceClientWrapper.Instance.GetAllTags())
             {
                 if ((from imageTag in Tags
                      where imageTag.Id == tag.Id
@@ -115,7 +115,7 @@ namespace ImageManagerWpfClient
                     AvailableTags.Add(tag);
                 }
             }
-
+            
             AddTagToImageCommand = new AddTagToImageCommand(Tags, AvailableTags);
             DeleteTagFromImageCommand = new DeleteTagFromImageCommand(Tags, AvailableTags);
 
