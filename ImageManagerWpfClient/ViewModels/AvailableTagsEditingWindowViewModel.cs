@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Windows.Input;
 using ImagesWcfServiceClient.Models;
 
@@ -114,6 +115,7 @@ namespace ImageManagerWpfClient
             {
                 AvailableTags.Add(tag);
             }
+            AvailableTags.CollectionChanged += AvailableTags_CollectionChanged;
         }
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -209,6 +211,13 @@ namespace ImageManagerWpfClient
             return (from tag in AvailableTags
                     where tag.TagName == tagName
                     select tag).Count() == 0;
+        }
+
+        //Used to validate content of TagNameToAdd and TagNameToUpdate after collection of tags has been changed.
+        private void AvailableTags_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(TagNameToAdd)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(TagNameToUpdate)));
         }
     }
 }
