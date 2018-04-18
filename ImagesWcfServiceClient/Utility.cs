@@ -44,6 +44,7 @@ namespace ImagesWcfServiceClient.Utilities
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.StreamSource = memorySteam;
                 bitmapImage.EndInit();
+                bitmapImage.Freeze();
             }
 
             return bitmapImage;

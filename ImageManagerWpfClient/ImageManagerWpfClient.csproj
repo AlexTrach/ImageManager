@@ -73,6 +73,7 @@
     <Compile Include="Commands\DeleteTagCommand.cs" />
     <Compile Include="Commands\UpdateTagCommand.cs" />
     <Compile Include="Commands\SelectTagToUpdateCommand.cs" />
+    <Compile Include="Commands\OpenFullSizeImageCommand.cs" />
     <Compile Include="ViewModels\AvailableTagsEditingWindowViewModel.cs" />
     <Compile Include="Views\AvailableTagsEditingWindow.xaml.cs">
       <DependentUpon>AvailableTagsEditingWindow.xaml</DependentUpon>

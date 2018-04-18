@@ -37,7 +37,7 @@ namespace ImageManagerWpfClient
                 ViewModel.TagNameToUpdate = null;
             }
             
-            //ServiceClientWrapper.Instance.DeleteTag(tagToDelete);
+            ServiceClientWrapper.Instance.DeleteTag(tagToDelete);
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

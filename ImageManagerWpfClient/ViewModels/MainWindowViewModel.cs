@@ -17,6 +17,8 @@ namespace ImageManagerWpfClient
         public ICommand ShutdownApplicationCommand { get; set; } = new ShutdownApplicationCommand();
         public ICommand EditAvailableTagsCommand { get; set; } = new EditAvailableTagsCommand();
 
+        public ICommand OpenFullSizeImageCommand { get; set; } = new OpenFullSizeImageCommand();
+
         public ICommand LoadMoreThumbnailsCommand { get; set; } = new LoadMoreThumbnailsCommand();
 
         public ObservableCollection<Image> Thumbnails { get; set; } = new ObservableCollection<Image>();

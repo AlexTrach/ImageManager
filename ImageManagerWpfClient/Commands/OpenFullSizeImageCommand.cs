@@ -8,7 +8,7 @@ using ImagesWcfServiceClient.Models;
 
 namespace ImageManagerWpfClient
 {
-    class AddTagCommand : ICommand
+    class OpenFullSizeImageCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
@@ -19,14 +19,12 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            AvailableTagsEditingWindowViewModel viewModel = (AvailableTagsEditingWindowViewModel) parameter;
+            Image thumbnail = (Image) parameter;
 
-            Tag tagToAdd = new Tag { TagName = viewModel.TagNameToAdd };
-            viewModel.TagNameToAdd = null;
+            Image fullSizeImage = ServiceClientWrapper.Instance.GetFullSizeImage(thumbnail.Id);
 
-            viewModel.AvailableTags.Add(tagToAdd);
-            
-            ServiceClientWrapper.Instance.AddTag(tagToAdd);
+            ImageOperationsWindow imageOperationsWindow = new ImageOperationsWindow(new ImageOperationsWindowViewModel(fullSizeImage));
+            imageOperationsWindow.ShowDialog();
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

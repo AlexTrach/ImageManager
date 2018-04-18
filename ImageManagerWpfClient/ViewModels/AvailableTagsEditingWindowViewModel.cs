@@ -142,7 +142,15 @@ namespace ImageManagerWpfClient
                         error = ValidateTagName(TagNameToAdd);
                         if (error == string.Empty)
                         {
-                            CanAddTag = true;
+                            if (TagNameToAdd != null)
+                            {
+                                CanAddTag = true;
+                            }
+                            else
+                            {
+                                CanAddTag = false;
+                            }
+                            
                             return error;
                         }
                         else
@@ -154,7 +162,15 @@ namespace ImageManagerWpfClient
                         error = ValidateTagName(TagNameToUpdate);
                         if (error == string.Empty)
                         {
-                            CanUpdateTag = true;
+                            if (TagNameToUpdate != null)
+                            {
+                                CanUpdateTag = true;
+                            }
+                            else
+                            {
+                                CanUpdateTag = false;
+                            }
+                            
                             return error;
                         }
                         else
@@ -196,14 +212,7 @@ namespace ImageManagerWpfClient
 
         private bool ValidateTagNameLength(string tagName)
         {
-            if (tagName.Length > 0 && tagName.Length <= 100)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return tagName.Length > 0 && tagName.Length <= 100;
         }
 
         private bool ValidateTagNameUniqueness(string tagName)

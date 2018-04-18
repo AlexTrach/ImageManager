@@ -66,7 +66,7 @@
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style>
-                        
+                        <Setter Property="Control.Margin" Value="5"/>
                     </Style>
                 </Setter.Value>
             </Setter>
@@ -74,7 +74,19 @@
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        
+                        <Button ToolTip="{Binding Path=ImageName}"
+                                CommandParameter="{Binding}"
+                                Command="{Binding Path=DataContext.OpenFullSizeImageCommand, 
+                                                  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <StackPanel>
+                                        <Image Width="100" Source="{Binding Path=ImageContent}"/>
+                                        <Label Width="100" HorizontalContentAlignment="Center" Content="{Binding Path=ImageName}"/>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
                     </DataTemplate>
                 </Setter.Value>
             </Setter>

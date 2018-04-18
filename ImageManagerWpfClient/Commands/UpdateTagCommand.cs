@@ -27,13 +27,12 @@ namespace ImageManagerWpfClient
             viewModel.AvailableTags.RemoveAt(tagToUpdateIndex);
 
             tagToUpdate.TagName = viewModel.TagNameToUpdate;
+            viewModel.TagNameToUpdate = null;
+            viewModel.CanEnterTagNameToUpdate = false;
 
             viewModel.AvailableTags.Insert(tagToUpdateIndex, tagToUpdate);
 
-            viewModel.CanEnterTagNameToUpdate = false;
-            viewModel.TagNameToUpdate = null;
-
-            //ServiceClientWrapper.Instance.UpdateTag(tagToUpdate);
+            ServiceClientWrapper.Instance.UpdateTag(tagToUpdate);
         }
 
         protected void OnCanExecuteChanged(EventArgs e)
