@@ -14,18 +14,6 @@ namespace ImagesDal
             Table = Context.Images;
         }
 
-        public override int Delete(int id)
-        {
-            Context.Entry(new Image { Id = id }).State = EntityState.Deleted;
-            return SaveChanges();
-        }
-
-        public override Task<int> DeleteAsync(int id)
-        {
-            Context.Entry(new Image { Id = id }).State = EntityState.Deleted;
-            return SaveChangesAsync();
-        }
-
         public override List<Image> GetAllEagerly()
         {
             return Table.Include(image => image.Tags).ToList();

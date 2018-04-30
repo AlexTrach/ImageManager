@@ -48,9 +48,17 @@ namespace ImagesDal
             return SaveChangesAsync();
         }
 
-        public abstract int Delete(int id);
+        public int Delete(int id)
+        {
+            Table.Remove(Table.Find(id));
+            return SaveChanges();
+        }
 
-        public abstract Task<int> DeleteAsync(int id);
+        public Task<int> DeleteAsync(int id)
+        {
+            Table.Remove(Table.Find(id));
+            return SaveChangesAsync();
+        }
 
         public int Delete(T entity)
         {
