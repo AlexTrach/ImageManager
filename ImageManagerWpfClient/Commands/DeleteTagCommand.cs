@@ -31,7 +31,7 @@ namespace ImageManagerWpfClient
 
             ViewModel.AvailableTags.Remove(tagToDelete);
 
-            if (object.ReferenceEquals(tagToDelete, ViewModel.TagToUpdate))
+            if (tagToDelete.Id == ViewModel.TagToUpdate?.Id)
             {
                 ViewModel.CanEnterTagNameToUpdate = false;
                 ViewModel.TagNameToUpdate = null;
