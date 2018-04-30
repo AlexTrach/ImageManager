@@ -43,7 +43,7 @@ namespace ImageManagerWpfClient
 
         public List<Image> GetNextThumbnailsWithSuchTags(List<Tag> tags, bool resetToBeginning)
         {
-            return GetNextThumbnailsWithSuchTags(tags, resetToBeginning);
+            return _serviceClient.GetNextThumbnailsWithSuchTags(tags, resetToBeginning);
         }
 
         public Image GetFullSizeImage(int id)

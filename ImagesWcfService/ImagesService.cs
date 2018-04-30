@@ -13,8 +13,7 @@ namespace ImagesWcfService
         private static Dictionary<string, IImagesServiceCallback> _clients = new Dictionary<string, IImagesServiceCallback>();
         private static object _clientsSyncObject = new object();
 
-        private ImagesDal.ImageRepository _imageRepository = new ImagesDal.ImageRepository();
-        private ImagesDal.TagRepository _tagRepository = new ImagesDal.TagRepository();
+        private ImagesDal.ImagesRepository _imagesRepository = new ImagesDal.ImagesRepository();
 
         private int _numberOfSentThumbnails;
 
@@ -36,7 +35,7 @@ namespace ImagesWcfService
                 _numberOfSentThumbnails = 0;
             }
 
-            List<ImagesDal.Image> imagesFromDatabase = _imageRepository.GetSpecifiedRange(_numberOfSentThumbnails, numberOfThumbnails);
+            List<ImagesDal.Image> imagesFromDatabase = _imagesRepository.GetSpecifiedRangeOfImages(_numberOfSentThumbnails, numberOfThumbnails);
             _numberOfSentThumbnails += imagesFromDatabase.Count;
 
             return Utility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
@@ -52,10 +51,10 @@ namespace ImagesWcfService
             List<ImagesDal.Tag> tagsToSearchBy = new List<ImagesDal.Tag>();
             foreach (Tag tag in tags)
             {
-                tagsToSearchBy.Add(_tagRepository.GetOne(tag.Id));
+                tagsToSearchBy.Add(_imagesRepository.GetOneTag(tag.Id));
             }
 
-            List<ImagesDal.Image> imagesFromDatabase = _imageRepository.GetSpecifiedRangeFromImagesWithSuchTags(_numberOfSentThumbnailsWithSpecifiedTags, numberOfThumbnails, tagsToSearchBy);
+            List<ImagesDal.Image> imagesFromDatabase = _imagesRepository.GetSpecifiedRangeFromImagesWithSuchTags(_numberOfSentThumbnailsWithSpecifiedTags, numberOfThumbnails, tagsToSearchBy);
             _numberOfSentThumbnails += imagesFromDatabase.Count;
 
             return Utility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
@@ -63,7 +62,7 @@ namespace ImagesWcfService
 
         public Image GetFullSizeImage(int id)
         {
-            ImagesDal.Image imageFromDatabase = _imageRepository.GetOne(id);
+            ImagesDal.Image imageFromDatabase = _imagesRepository.GetOneImage(id);
             Image imageToSendToClient = new Image()
             {
                 Id = imageFromDatabase.Id,
@@ -78,7 +77,7 @@ namespace ImagesWcfService
         
         public Tag[] GetAllTags()
         {
-            return Utility.CreateTagsToSendToClient(_tagRepository.GetAll());
+            return Utility.CreateTagsToSendToClient(_imagesRepository.GetAllTags());
         }
 
         public void AddImage(Image image)
@@ -90,36 +89,36 @@ namespace ImagesWcfService
             };
             foreach (Tag tag in image.Tags)
             {
-                ImagesDal.Tag tagToAddToImage = _tagRepository.GetOne(tag.Id);
+                ImagesDal.Tag tagToAddToImage = _imagesRepository.GetOneTag(tag.Id);
                 imageToAdd.Tags.Add(tagToAddToImage);
             }
 
-            _imageRepository.Add(imageToAdd);
+            _imagesRepository.AddImage(imageToAdd);
 
             NotifyOtherClientsAboutDatabaseUpdate();
         }
 
         public void UpdateImage(Image image)
         {
-            ImagesDal.Image imageToUpdate = _imageRepository.GetOne(image.Id);
+            ImagesDal.Image imageToUpdate = _imagesRepository.GetOneImage(image.Id);
 
             imageToUpdate.ImageName = image.ImageName;
             imageToUpdate.ImageContent = image.ImageContent;
             imageToUpdate.Tags.Clear();
             foreach (Tag tag in image.Tags)
             {
-                ImagesDal.Tag tagToAddToImage = _tagRepository.GetOne(tag.Id);
+                ImagesDal.Tag tagToAddToImage = _imagesRepository.GetOneTag(tag.Id);
                 imageToUpdate.Tags.Add(tagToAddToImage);
             }
 
-            _imageRepository.Update(imageToUpdate);
+            _imagesRepository.UpdateImage(imageToUpdate);
 
             NotifyOtherClientsAboutDatabaseUpdate();
         }
 
         public void DeleteImage(int id)
         {
-            _imageRepository.Delete(id);
+            _imagesRepository.DeleteImage(id);
 
             NotifyOtherClientsAboutDatabaseUpdate();
         }
@@ -131,25 +130,25 @@ namespace ImagesWcfService
                 TagName = tag.TagName
             };
 
-            _tagRepository.Add(newTag);
+            _imagesRepository.AddTag(newTag);
 
             NotifyOtherClientsAboutDatabaseUpdate();
         }
 
         public void UpdateTag(Tag tag)
         {
-            ImagesDal.Tag tagToUpdate = _tagRepository.GetOne(tag.Id);
+            ImagesDal.Tag tagToUpdate = _imagesRepository.GetOneTag(tag.Id);
 
             tagToUpdate.TagName = tag.TagName;
 
-            _tagRepository.Update(tagToUpdate);
+            _imagesRepository.UpdateTag(tagToUpdate);
 
             NotifyOtherClientsAboutDatabaseUpdate();
         }
 
         public void DeleteTag(int id)
         {
-            _tagRepository.Delete(id);
+            _imagesRepository.DeleteTag(id);
 
             NotifyOtherClientsAboutDatabaseUpdate();
         }
@@ -204,8 +203,7 @@ namespace ImagesWcfService
             {
                 if (disposing)
                 {
-                    _imageRepository.Dispose();
-                    _tagRepository.Dispose();
+                    _imagesRepository.Dispose();
                 }
             }
             _disposed = true;
