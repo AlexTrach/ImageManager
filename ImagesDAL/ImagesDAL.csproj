@@ -7,8 +7,8 @@
     <ProjectGuid>{35CF95CC-5F2A-4A5A-BC54-6E96866B4C84}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImagesDAL</RootNamespace>
-    <AssemblyName>ImagesDAL</AssemblyName>
+    <RootNamespace>ImagesDal</RootNamespace>
+    <AssemblyName>ImagesDal</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

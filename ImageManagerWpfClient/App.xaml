@@ -11,14 +11,13 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Label Background="{TemplateBinding Property=Background}"
-                               HorizontalContentAlignment="Center"
                                Foreground="{TemplateBinding Property=Foreground}"
+                               HorizontalContentAlignment="Center"
                                Content="{TemplateBinding Property=Content}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             
-            <Setter Property="Content" Value="Load more"/>
             <Setter Property="Background" Value="Orange"/>
             <Setter Property="Foreground" Value="White"/>
 
@@ -41,10 +40,11 @@
 
         <Style x:Key="LoadMoreButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
             <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Content" Value="Load more"/>
         </Style>
-        
+
         <Style x:Key="ThumbnailsItemsControlStyle" TargetType="ItemsControl">
-            
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
@@ -62,7 +62,7 @@
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
-            
+
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style>
@@ -90,7 +90,7 @@
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
-            
+
         </Style>
 
         <Style x:Key="LabelStyle" TargetType="Label">

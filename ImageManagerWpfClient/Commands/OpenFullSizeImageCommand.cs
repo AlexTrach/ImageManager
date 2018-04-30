@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using ImagesWcfServiceClient.Models;
 
@@ -24,6 +25,7 @@ namespace ImageManagerWpfClient
             Image fullSizeImage = ServiceClientWrapper.Instance.GetFullSizeImage(thumbnail.Id);
 
             ImageOperationsWindow imageOperationsWindow = new ImageOperationsWindow(new ImageOperationsWindowViewModel(fullSizeImage));
+            Application.Current.MainWindow = imageOperationsWindow;
             imageOperationsWindow.ShowDialog();
         }
 

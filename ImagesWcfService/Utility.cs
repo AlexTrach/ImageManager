@@ -10,7 +10,7 @@ namespace ImagesWcfService
 {
     static class Utility
     {
-        public static Image[] CreateThumnailsToSendToClient(List<ImagesDAL.Image> imagesFromDatabase, int widthOfThumbnail)
+        public static Image[] CreateThumnailsToSendToClient(List<ImagesDal.Image> imagesFromDatabase, int widthOfThumbnail)
         {
             Image[] thumbnailsToSendToClient = new Image[imagesFromDatabase.Count];
 
@@ -53,13 +53,13 @@ namespace ImagesWcfService
             return thumbnailContent;
         }
 
-        public static Tag[] CreateTagsToSendToClient(ICollection<ImagesDAL.Tag> tagsFromDatabase)
+        public static Tag[] CreateTagsToSendToClient(ICollection<ImagesDal.Tag> tagsFromDatabase)
         {
             Tag[] tagsToSendToClient = new Tag[tagsFromDatabase.Count];
 
             for (int i = 0; i < tagsToSendToClient.Length; i++)
             {
-                ImagesDAL.Tag tagFromDatabase = tagsFromDatabase.ElementAt(i);
+                ImagesDal.Tag tagFromDatabase = tagsFromDatabase.ElementAt(i);
                 tagsToSendToClient[i] = new Tag()
                 {
                     Id = tagFromDatabase.Id,

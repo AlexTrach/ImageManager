@@ -24,8 +24,6 @@ namespace ImageManagerWpfClient
 
         public Image Image { get; private set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public string ImageName
         {
             get
@@ -116,11 +114,13 @@ namespace ImageManagerWpfClient
                 }
             }
             
-            AddTagToImageCommand = new AddTagToImageCommand(Tags, AvailableTags);
-            DeleteTagFromImageCommand = new DeleteTagFromImageCommand(Tags, AvailableTags);
+            AddTagToImageCommand = new AddTagToImageCommand(this);
+            DeleteTagFromImageCommand = new DeleteTagFromImageCommand(this);
 
             EnableRespectiveOperations();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {

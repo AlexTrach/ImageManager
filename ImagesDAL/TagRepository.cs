@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 
-namespace ImagesDAL
+namespace ImagesDal
 {
     public class TagRepository : BaseRepository<Tag>
     {

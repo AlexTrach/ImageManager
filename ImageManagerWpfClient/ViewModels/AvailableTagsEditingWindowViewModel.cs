@@ -104,8 +104,6 @@ namespace ImageManagerWpfClient
 
         public ObservableCollection<Tag> AvailableTags { get; set; } = new ObservableCollection<Tag>();
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public AvailableTagsEditingWindowViewModel()
         {
             SelectTagToUpdateCommand = new SelectTagToUpdateCommand(this);
@@ -117,6 +115,8 @@ namespace ImageManagerWpfClient
             }
             AvailableTags.CollectionChanged += AvailableTags_CollectionChanged;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {

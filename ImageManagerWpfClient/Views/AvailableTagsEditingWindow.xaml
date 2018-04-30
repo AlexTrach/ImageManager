@@ -223,9 +223,9 @@
                     Command="{Binding Path=UpdateTagCommand}"/>
 
         </Grid>
-        
-        <ItemsControl Style="{StaticResource AvailableTagsItemsControlStyle}" 
-                      Margin="4,2,4,4"
+
+        <ItemsControl Margin="4,2,4,4"
+                      Style="{StaticResource AvailableTagsItemsControlStyle}" 
                       ItemsSource="{Binding Path=AvailableTags}"/>
         
     </DockPanel>

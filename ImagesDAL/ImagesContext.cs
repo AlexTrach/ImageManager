@@ -1,4 +1,4 @@
-namespace ImagesDAL
+namespace ImagesDal
 {
     using System;
     using System.Data.Entity;

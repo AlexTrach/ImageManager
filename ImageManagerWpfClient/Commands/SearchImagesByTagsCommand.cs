@@ -4,21 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ImagesWcfServiceClient.Models;
-using System.Collections.ObjectModel;
 
 namespace ImageManagerWpfClient
 {
-    class AddTagToImageCommand : ICommand
+    class SearchImagesByTagsCommand : ICommand
     {
-        public ImageOperationsWindowViewModel ViewModel { get; set; }
-
         public event EventHandler CanExecuteChanged;
-
-        public AddTagToImageCommand(ImageOperationsWindowViewModel viewModel)
-        {
-            ViewModel = viewModel;
-        }
 
         public bool CanExecute(object parameter)
         {
@@ -27,12 +18,9 @@ namespace ImageManagerWpfClient
 
         public void Execute(object parameter)
         {
-            Tag tagToAdd = (Tag) parameter;
+            SearchImagesByTagsWindow searchImagesByTagsWindow = new SearchImagesByTagsWindow();
 
-            ViewModel.Tags.Add(tagToAdd);
-            ViewModel.Image.Tags.Add(tagToAdd);
-
-            ViewModel.AvailableTags.Remove(tagToAdd);
+            searchImagesByTagsWindow.ShowDialog();
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

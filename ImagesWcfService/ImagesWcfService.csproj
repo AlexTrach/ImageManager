@@ -79,9 +79,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ImagesDAL\ImagesDAL.csproj">
+    <ProjectReference Include="..\ImagesDAL\ImagesDal.csproj">
       <Project>{35cf95cc-5f2a-4a5a-bc54-6e96866b4c84}</Project>
-      <Name>ImagesDAL</Name>
+      <Name>ImagesDal</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

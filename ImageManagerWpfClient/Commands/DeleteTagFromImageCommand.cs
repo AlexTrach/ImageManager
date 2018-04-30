@@ -11,15 +11,13 @@ namespace ImageManagerWpfClient
 {
     class DeleteTagFromImageCommand : ICommand
     {
-        public ObservableCollection<Tag> Tags { get; set; }
-        public ObservableCollection<Tag> AvailableTags { get; set; }
+        public ImageOperationsWindowViewModel ViewModel { get; set; }
 
         public event EventHandler CanExecuteChanged;
 
-        public DeleteTagFromImageCommand(ObservableCollection<Tag> tags, ObservableCollection<Tag> availableTags)
+        public DeleteTagFromImageCommand(ImageOperationsWindowViewModel viewModel)
         {
-            Tags = tags;
-            AvailableTags = availableTags;
+            ViewModel = viewModel;
         }
 
         public bool CanExecute(object parameter)
@@ -31,9 +29,10 @@ namespace ImageManagerWpfClient
         {
             Tag tagToDelete = (Tag) parameter;
 
-            Tags.Remove(tagToDelete);
+            ViewModel.Tags.Remove(tagToDelete);
+            ViewModel.Image.Tags.Remove(tagToDelete);
 
-            AvailableTags.Add(tagToDelete);
+            ViewModel.AvailableTags.Add(tagToDelete);
         }
 
         protected void OnCanExecuteChanged(EventArgs e)

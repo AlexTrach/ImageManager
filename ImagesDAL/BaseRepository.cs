@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 
-namespace ImagesDAL
+namespace ImagesDal
 {
     public abstract class BaseRepository<T> : IRepository<T>, IDisposable where T: class
     {

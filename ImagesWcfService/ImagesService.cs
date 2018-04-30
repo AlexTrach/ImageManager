@@ -13,8 +13,8 @@ namespace ImagesWcfService
         private static Dictionary<string, IImagesServiceCallback> _clients = new Dictionary<string, IImagesServiceCallback>();
         private static object _clientsSyncObject = new object();
 
-        private ImagesDAL.ImageRepository _imageRepository = new ImagesDAL.ImageRepository();
-        private ImagesDAL.TagRepository _tagRepository = new ImagesDAL.TagRepository();
+        private ImagesDal.ImageRepository _imageRepository = new ImagesDal.ImageRepository();
+        private ImagesDal.TagRepository _tagRepository = new ImagesDal.TagRepository();
 
         private int _numberOfSentThumbnails;
 
@@ -36,7 +36,7 @@ namespace ImagesWcfService
                 _numberOfSentThumbnails = 0;
             }
 
-            List<ImagesDAL.Image> imagesFromDatabase = _imageRepository.GetSpecifiedRange(_numberOfSentThumbnails, numberOfThumbnails);
+            List<ImagesDal.Image> imagesFromDatabase = _imageRepository.GetSpecifiedRange(_numberOfSentThumbnails, numberOfThumbnails);
             _numberOfSentThumbnails += imagesFromDatabase.Count;
 
             return Utility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
@@ -49,13 +49,13 @@ namespace ImagesWcfService
                 _numberOfSentThumbnailsWithSpecifiedTags = 0;
             }
 
-            List<ImagesDAL.Tag> tagsToSearchBy = new List<ImagesDAL.Tag>();
+            List<ImagesDal.Tag> tagsToSearchBy = new List<ImagesDal.Tag>();
             foreach (Tag tag in tags)
             {
                 tagsToSearchBy.Add(_tagRepository.GetOne(tag.Id));
             }
 
-            List<ImagesDAL.Image> imagesFromDatabase = _imageRepository.GetSpecifiedRangeFromImagesWithSuchTags(_numberOfSentThumbnailsWithSpecifiedTags, numberOfThumbnails, tagsToSearchBy);
+            List<ImagesDal.Image> imagesFromDatabase = _imageRepository.GetSpecifiedRangeFromImagesWithSuchTags(_numberOfSentThumbnailsWithSpecifiedTags, numberOfThumbnails, tagsToSearchBy);
             _numberOfSentThumbnails += imagesFromDatabase.Count;
 
             return Utility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
@@ -63,7 +63,7 @@ namespace ImagesWcfService
 
         public Image GetFullSizeImage(int id)
         {
-            ImagesDAL.Image imageFromDatabase = _imageRepository.GetOne(id);
+            ImagesDal.Image imageFromDatabase = _imageRepository.GetOne(id);
             Image imageToSendToClient = new Image()
             {
                 Id = imageFromDatabase.Id,
@@ -83,14 +83,14 @@ namespace ImagesWcfService
 
         public void AddImage(Image image)
         {
-            ImagesDAL.Image imageToAdd = new ImagesDAL.Image()
+            ImagesDal.Image imageToAdd = new ImagesDal.Image()
             {
                 ImageName = image.ImageName,
                 ImageContent = image.ImageContent,  
             };
             foreach (Tag tag in image.Tags)
             {
-                ImagesDAL.Tag tagToAddToImage = _tagRepository.GetOne(tag.Id);
+                ImagesDal.Tag tagToAddToImage = _tagRepository.GetOne(tag.Id);
                 imageToAdd.Tags.Add(tagToAddToImage);
             }
 
@@ -101,14 +101,14 @@ namespace ImagesWcfService
 
         public void UpdateImage(Image image)
         {
-            ImagesDAL.Image imageToUpdate = _imageRepository.GetOne(image.Id);
+            ImagesDal.Image imageToUpdate = _imageRepository.GetOne(image.Id);
 
             imageToUpdate.ImageName = image.ImageName;
             imageToUpdate.ImageContent = image.ImageContent;
             imageToUpdate.Tags.Clear();
             foreach (Tag tag in image.Tags)
             {
-                ImagesDAL.Tag tagToAddToImage = _tagRepository.GetOne(tag.Id);
+                ImagesDal.Tag tagToAddToImage = _tagRepository.GetOne(tag.Id);
                 imageToUpdate.Tags.Add(tagToAddToImage);
             }
 
@@ -126,7 +126,7 @@ namespace ImagesWcfService
 
         public void AddTag(Tag tag)
         {
-            ImagesDAL.Tag newTag = new ImagesDAL.Tag()
+            ImagesDal.Tag newTag = new ImagesDal.Tag()
             {
                 TagName = tag.TagName
             };
@@ -138,7 +138,7 @@ namespace ImagesWcfService
 
         public void UpdateTag(Tag tag)
         {
-            ImagesDAL.Tag tagToUpdate = _tagRepository.GetOne(tag.Id);
+            ImagesDal.Tag tagToUpdate = _tagRepository.GetOne(tag.Id);
 
             tagToUpdate.TagName = tag.TagName;
 

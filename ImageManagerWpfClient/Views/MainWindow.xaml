@@ -19,6 +19,7 @@
             
             <MenuItem Header="Tools">
                 <MenuItem Header="Edit available tags..." Command="{Binding Path=EditAvailableTagsCommand}"/>
+                <MenuItem Header="Search images by tags..." Command="{Binding Path=SearchImagesByTagsCommand}"/>
             </MenuItem>
             
         </Menu>

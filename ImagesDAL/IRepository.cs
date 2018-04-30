@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImagesDAL
+namespace ImagesDal
 {
     public interface IRepository<T>
     {
