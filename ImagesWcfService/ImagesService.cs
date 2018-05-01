@@ -17,7 +17,7 @@ namespace ImagesWcfService
 
         private int _numberOfSentThumbnails;
 
-        private Tag[] _tagsToSearchBy = new Tag[] { };
+        private Tag[] _previousTagsToSearchBy = new Tag[] { };
         private int _numberOfSentThumbnailsWithSpecifiedTags;
 
         public void Subscribe()
@@ -43,8 +43,19 @@ namespace ImagesWcfService
 
         public Image[] GetNextThumbnailsWithSuchTags(int numberOfThumbnails, int widthOfThumbnail, Tag[] tags, bool resetToBeginning)
         {
-            if (resetToBeginning || Utility.TagArraysAreEqual(_tagsToSearchBy, tags))
+            if (resetToBeginning)
             {
+                _numberOfSentThumbnailsWithSpecifiedTags = 0;
+            }
+
+            if (!Utility.TagArraysAreEqual(_previousTagsToSearchBy, tags))
+            {
+                _previousTagsToSearchBy = new Tag[tags.Length];
+                for (int i = 0; i < tags.Length; i++)
+                {
+                    _previousTagsToSearchBy[i] = tags[i];
+                }
+
                 _numberOfSentThumbnailsWithSpecifiedTags = 0;
             }
 

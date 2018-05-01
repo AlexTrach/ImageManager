@@ -22,7 +22,6 @@ namespace ImageManagerWpfClient
             ImageOperationsWindowViewModel viewModel = (ImageOperationsWindowViewModel) parameter;
 
             Application.Current.MainWindow.Close();
-            Application.Current.MainWindow = Application.Current.Windows[0];
 
             Task.Factory.StartNew(() => ServiceClientWrapper.Instance.AddImage(viewModel.Image));
         }

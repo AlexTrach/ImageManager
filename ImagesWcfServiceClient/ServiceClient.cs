@@ -18,6 +18,7 @@ namespace ImagesWcfServiceClient
 
         private bool _receivedAllAvailableThumbnails = false;
         private bool _receivedAllAvailableThumbnailsWithSuchTags = false;
+        private List<Tag> _previousTagsToSearchBy = new List<Tag>();
 
         public ServiceClient(IDatabaseUpdateListener listener)
         {
@@ -54,6 +55,14 @@ namespace ImagesWcfServiceClient
         {
             if (resetToBeginning)
             {
+                _receivedAllAvailableThumbnailsWithSuchTags = false;
+            }
+
+            if (!Utility.CheckWhetherTagCollectionsAreEqual(_previousTagsToSearchBy, tags))
+            {
+                _previousTagsToSearchBy.Clear();
+                _previousTagsToSearchBy.AddRange(tags);
+
                 _receivedAllAvailableThumbnailsWithSuchTags = false;
             }
 

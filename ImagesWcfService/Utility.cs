@@ -79,7 +79,18 @@ namespace ImagesWcfService
 
             for (int i = 0; i < firstTagArray.Length; i++)
             {
-                if (firstTagArray[i].Id != secondTagArray[i].Id)
+                bool isTagFromFirstArrayPresentInSecondArray = false;
+
+                for (int j = 0; j < secondTagArray.Length; j++)
+                {
+                    if (firstTagArray[i].Id == secondTagArray[j].Id)
+                    {
+                        isTagFromFirstArrayPresentInSecondArray = true;
+                        break;
+                    }
+                }
+
+                if (!isTagFromFirstArrayPresentInSecondArray)
                 {
                     return false;
                 }
