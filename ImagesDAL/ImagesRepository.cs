@@ -79,36 +79,30 @@ namespace ImagesDal
 
         public List<Image> GetSpecifiedRangeFromImagesWithSuchTags(int startIndex, int count, List<Tag> tags)
         {
-            IQueryable<Image> queryResult = null;
+            int[] ids = new int[tags.Count];
             for (int i = 0; i < tags.Count; i++)
             {
-                if (i == 0)
-                {
-                    queryResult = Context.Entry(tags[i]).Collection(tag => tag.Images).Query();
-                }
-                else
-                {
-                    queryResult = Context.Entry(tags[i]).Collection(currentTag => currentTag.Images).Query().Intersect(queryResult);
-                }
+                ids[i] = tags[i].Id;
             }
+
+            IQueryable<Tag> tagsToSearchBy = Context.Tags.Where(tagToSearchBy => ids.Contains(tagToSearchBy.Id));
+
+            IQueryable<Image> queryResult = Context.Images.Where(image => image.Tags.Intersect(tagsToSearchBy).Count() == tagsToSearchBy.Count());
 
             return queryResult.OrderBy(image => image.Id).Skip(startIndex).Take(count).ToList();
         }
 
         public Task<List<Image>> GetSpecifiedRangeFromImagesWithSuchTagsAsync(int startIndex, int count, List<Tag> tags)
         {
-            IQueryable<Image> queryResult = null;
+            int[] ids = new int[tags.Count];
             for (int i = 0; i < tags.Count; i++)
             {
-                if (i == 0)
-                {
-                    queryResult = Context.Entry(tags[i]).Collection(tag => tag.Images).Query();
-                }
-                else
-                {
-                    queryResult = Context.Entry(tags[i]).Collection(currentTag => currentTag.Images).Query().Intersect(queryResult);
-                }
+                ids[i] = tags[i].Id;
             }
+
+            IQueryable<Tag> tagsToSearchBy = Context.Tags.Where(tagToSearchBy => ids.Contains(tagToSearchBy.Id));
+
+            IQueryable<Image> queryResult = Context.Images.Where(image => image.Tags.Intersect(tagsToSearchBy).Count() == tagsToSearchBy.Count());
 
             return queryResult.OrderBy(image => image.Id).Skip(startIndex).Take(count).ToListAsync();
         }
