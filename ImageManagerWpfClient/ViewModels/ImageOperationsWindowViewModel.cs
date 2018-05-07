@@ -7,11 +7,13 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Windows;
 using ImagesWcfServiceClient.Models;
+using ImagesWcfServiceClient.DatabaseUpdateNotificaionInfrastructure;
 
 namespace ImageManagerWpfClient
 {
-    public class ImageOperationsWindowViewModel : INotifyPropertyChanged, IDataErrorInfo
+    public class ImageOperationsWindowViewModel : INotifyPropertyChanged, IDataErrorInfo, IDisposable
     {
         public ICommand ChangeImageContentCommand { get; set; } = new ChangeImageContentCommand();
 
@@ -50,7 +52,7 @@ namespace ImageManagerWpfClient
             }
         }
 
-        public ObservableCollection<Tag> Tags { get; set; } = new ObservableCollection<Tag>();
+        public ObservableCollection<Tag> ImageTags { get; set; } = new ObservableCollection<Tag>();
         public ObservableCollection<Tag> AvailableTags { get; set; } = new ObservableCollection<Tag>();
 
         private bool _canAdd;
@@ -97,16 +99,19 @@ namespace ImageManagerWpfClient
 
         public ImageOperationsWindowViewModel(Image image)
         {
+            AddTagToImageCommand = new AddTagToImageCommand(this);
+            DeleteTagFromImageCommand = new DeleteTagFromImageCommand(this);
+
             Image = image;
 
             foreach (Tag tag in Image.Tags)
             {
-                Tags.Add(tag);
+                ImageTags.Add(tag);
             }
 
             foreach (Tag tag in ServiceClientWrapper.Instance.GetAllTags())
             {
-                if ((from imageTag in Tags
+                if ((from imageTag in ImageTags
                      where imageTag.Id == tag.Id
                      select imageTag).Count() == 0)
                 {
@@ -114,15 +119,15 @@ namespace ImageManagerWpfClient
                 }
             }
             
-            AddTagToImageCommand = new AddTagToImageCommand(this);
-            DeleteTagFromImageCommand = new DeleteTagFromImageCommand(this);
+            ServiceClientWrapper.Instance.ImageChanged += ServiceClientWrapper_ImageChanged;
+            ServiceClientWrapper.Instance.TagChanged += ServiceClientWrapper_TagChanged;
 
             EnableRespectiveOperations();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
@@ -181,6 +186,140 @@ namespace ImageManagerWpfClient
             {
                 CanUpdate = false;
             }
+        }
+
+        private async void ServiceClientWrapper_ImageChanged(object sender, ImageChangedEventArgs e)
+        {
+            if (Image.Id == e.Id)
+            {
+                switch (e.EntityState)
+                {
+                    case EntityState.Modified:
+                        Image image = await Task.Factory.StartNew(() => ServiceClientWrapper.Instance.GetFullSizeImage(e.Id));
+                        if (image != null)
+                        {
+                            Image = image;
+                            ImageName = image.ImageName;
+                            ImageContent = image.ImageContent;
+
+                            ImageTags.Clear();
+                            foreach (Tag tag in Image.Tags)
+                            {
+                                ImageTags.Add(tag);
+                            }
+
+                            AvailableTags.Clear();
+                            foreach (Tag tag in ServiceClientWrapper.Instance.GetAllTags())
+                            {
+                                if ((from imageTag in ImageTags
+                                     where imageTag.Id == tag.Id
+                                     select imageTag).Count() == 0)
+                                {
+                                    AvailableTags.Add(tag);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Application.Current.MainWindow.Close();
+                        }
+                        break;
+                    case EntityState.Deleted:
+                        Application.Current.MainWindow.Close();
+                        break;
+                }
+            }
+        }
+
+        private async void ServiceClientWrapper_TagChanged(object sender, TagChangedEventArgs e)
+        {
+            switch (e.EntityState)
+            {
+                case EntityState.Added:
+                    Tag tagToAdd = await Task.Factory.StartNew(() => ServiceClientWrapper.Instance.GetTag(e.Id));
+                    if (tagToAdd != null)
+                    {
+                        AvailableTags.Add(tagToAdd);
+                    }
+                    break;
+                case EntityState.Modified:
+                    for (int i = 0; i < ImageTags.Count; i++)
+                    {
+                        if (ImageTags[i].Id == e.Id)
+                        {
+                            Tag tag = await Task.Factory.StartNew(() => ServiceClientWrapper.Instance.GetTag(e.Id));
+                            if (tag != null)
+                            {
+                                ImageTags.RemoveAt(i);
+                                ImageTags.Insert(i, tag);
+                                Image.Tags.RemoveAt(i);
+                                Image.Tags.Insert(i, tag);
+                            }
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < AvailableTags.Count; i++)
+                    {
+                        if (AvailableTags[i].Id == e.Id)
+                        {
+                            Tag tag = await Task.Factory.StartNew(() => ServiceClientWrapper.Instance.GetTag(e.Id));
+                            if (tag != null)
+                            {
+                                AvailableTags.RemoveAt(i);
+                                AvailableTags.Insert(i, tag);
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                case EntityState.Deleted:
+                    foreach (Tag tag in ImageTags)
+                    {
+                        if (tag.Id == e.Id)
+                        {
+                            ImageTags.Remove(tag);
+                            Image.Tags.Remove(tag);
+                            break;
+                        }
+                    }
+
+                    foreach (Tag tag in AvailableTags)
+                    {
+                        if (tag.Id == e.Id)
+                        {
+                            AvailableTags.Remove(tag);
+                            break;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void CleanUp(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    ServiceClientWrapper.Instance.ImageChanged -= ServiceClientWrapper_ImageChanged;
+                    ServiceClientWrapper.Instance.TagChanged -= ServiceClientWrapper_TagChanged;
+                }
+            }
+            _disposed = true;
+        }
+
+        ~ImageOperationsWindowViewModel()
+        {
+            CleanUp(false);
         }
     }
 }

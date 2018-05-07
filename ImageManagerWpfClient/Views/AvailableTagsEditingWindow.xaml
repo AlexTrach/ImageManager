@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageManagerWpfClient"
         mc:Ignorable="d"
-        Title="Available tags editing" Height="350" Width="525">
+        Title="Available tags editing" Height="350" Width="525" Closed="Window_Closed">
 
     <Window.Resources>
         <Style x:Key="AvailableTagsItemsControlStyle" TargetType="ItemsControl">

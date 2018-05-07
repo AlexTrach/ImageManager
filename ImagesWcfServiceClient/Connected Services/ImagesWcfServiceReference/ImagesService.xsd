@@ -28,4 +28,27 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Tag" nillable="true" type="tns:Tag" />
+  <xs:complexType name="EntityChangeInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EntityId" type="xs:int" />
+      <xs:element minOccurs="0" name="EntityState" type="tns:EntityState" />
+      <xs:element minOccurs="0" name="EntityType" type="tns:EntityType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EntityChangeInfo" nillable="true" type="tns:EntityChangeInfo" />
+  <xs:simpleType name="EntityState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Added" />
+      <xs:enumeration value="Modified" />
+      <xs:enumeration value="Deleted" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EntityState" nillable="true" type="tns:EntityState" />
+  <xs:simpleType name="EntityType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Image" />
+      <xs:enumeration value="Tag" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EntityType" nillable="true" type="tns:EntityType" />
 </xs:schema>

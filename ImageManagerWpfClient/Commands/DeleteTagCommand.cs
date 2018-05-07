@@ -29,8 +29,6 @@ namespace ImageManagerWpfClient
         {
             Tag tagToDelete = (Tag) parameter;
 
-            ViewModel.AvailableTags.Remove(tagToDelete);
-
             if (tagToDelete.Id == ViewModel.TagToUpdate?.Id)
             {
                 ViewModel.CanEnterTagNameToUpdate = false;
@@ -40,7 +38,7 @@ namespace ImageManagerWpfClient
             ServiceClientWrapper.Instance.DeleteTag(tagToDelete);
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

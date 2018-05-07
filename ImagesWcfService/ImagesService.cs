@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using ImagesWcfService.Utilities;
 
 namespace ImagesWcfService
 {
@@ -66,29 +67,60 @@ namespace ImagesWcfService
             }
 
             List<ImagesDal.Image> imagesFromDatabase = _imagesRepository.GetSpecifiedRangeFromImagesWithSuchTags(_numberOfSentThumbnailsWithSpecifiedTags, numberOfThumbnails, tagsToSearchBy);
-            _numberOfSentThumbnails += imagesFromDatabase.Count;
+            _numberOfSentThumbnailsWithSpecifiedTags += imagesFromDatabase.Count;
 
             return Utility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
+        }
+
+        public Image GetThumbnail(int widthOfThumbnail, int id)
+        {
+            ImagesDal.Image imageFromDatabase = _imagesRepository.GetOneImage(id);
+            if (imageFromDatabase == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Utility.CreateThumbnailToSendToClient(imageFromDatabase, widthOfThumbnail);
+            }   
         }
 
         public Image GetFullSizeImage(int id)
         {
             ImagesDal.Image imageFromDatabase = _imagesRepository.GetOneImage(id);
-            Image imageToSendToClient = new Image()
+            if (imageFromDatabase == null)
             {
-                Id = imageFromDatabase.Id,
-                ImageName = imageFromDatabase.ImageName,
-                ImageContent = imageFromDatabase.ImageContent,
-                Tags = Utility.CreateTagsToSendToClient(imageFromDatabase.Tags)
-            };
-
-            return imageToSendToClient;
+                return null;
+            }
+            else
+            {
+                return new Image()
+                {
+                    Id = imageFromDatabase.Id,
+                    ImageName = imageFromDatabase.ImageName,
+                    ImageContent = imageFromDatabase.ImageContent,
+                    Tags = Utility.CreateTagsToSendToClient(new List<ImagesDal.Tag>(imageFromDatabase.Tags))
+                };
+            }
         }
 
         
         public Tag[] GetAllTags()
         {
             return Utility.CreateTagsToSendToClient(_imagesRepository.GetAllTags());
+        }
+
+        public Tag GetTag(int id)
+        {
+            ImagesDal.Tag tagFromDatabase = _imagesRepository.GetOneTag(id);
+            if (tagFromDatabase == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Utility.CreateTagToSendToClient(tagFromDatabase);
+            }
         }
 
         public void AddImage(Image image)
@@ -106,7 +138,7 @@ namespace ImagesWcfService
 
             _imagesRepository.AddImage(imageToAdd);
 
-            NotifyOtherClientsAboutDatabaseUpdate();
+            NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(imageToAdd.Id, EntityType.Image, EntityState.Added));
         }
 
         public void UpdateImage(Image image)
@@ -121,29 +153,31 @@ namespace ImagesWcfService
                 ImagesDal.Tag tagToAddToImage = _imagesRepository.GetOneTag(tag.Id);
                 imageToUpdate.Tags.Add(tagToAddToImage);
             }
-
-            _imagesRepository.UpdateImage(imageToUpdate);
-
-            NotifyOtherClientsAboutDatabaseUpdate();
+ 
+            if (_imagesRepository.UpdateImage(imageToUpdate) != 0)
+            {
+                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(imageToUpdate.Id, EntityType.Image, EntityState.Modified));
+            }
         }
 
         public void DeleteImage(int id)
         {
-            _imagesRepository.DeleteImage(id);
-
-            NotifyOtherClientsAboutDatabaseUpdate();
+            if (_imagesRepository.DeleteImage(id) != 0)
+            {
+                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(id, EntityType.Image, EntityState.Deleted));
+            }
         }
 
         public void AddTag(Tag tag)
         {
-            ImagesDal.Tag newTag = new ImagesDal.Tag()
+            ImagesDal.Tag tagToAdd = new ImagesDal.Tag()
             {
                 TagName = tag.TagName
             };
 
-            _imagesRepository.AddTag(newTag);
+            _imagesRepository.AddTag(tagToAdd);
 
-            NotifyOtherClientsAboutDatabaseUpdate();
+            NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(tagToAdd.Id, EntityType.Tag, EntityState.Added));
         }
 
         public void UpdateTag(Tag tag)
@@ -152,16 +186,18 @@ namespace ImagesWcfService
 
             tagToUpdate.TagName = tag.TagName;
 
-            _imagesRepository.UpdateTag(tagToUpdate);
-
-            NotifyOtherClientsAboutDatabaseUpdate();
+            if (_imagesRepository.UpdateTag(tagToUpdate) != 0)
+            {
+                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(tagToUpdate.Id, EntityType.Tag, EntityState.Modified));
+            }
         }
 
         public void DeleteTag(int id)
         {
-            _imagesRepository.DeleteTag(id);
-
-            NotifyOtherClientsAboutDatabaseUpdate();
+            if (_imagesRepository.DeleteTag(id) != 0)
+            {
+                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(id, EntityType.Tag, EntityState.Deleted));
+            }
         }
 
         public void Unsubscribe()
@@ -172,30 +208,34 @@ namespace ImagesWcfService
             }
         }
 
-        private void NotifyOtherClientsAboutDatabaseUpdate()
+        private void NotifyOtherClientsAboutDatabaseUpdate(EntityChangeInfo entityChangeInfo)
         {
             lock (_clientsSyncObject)
             {
+                List<string> clientsToRemove = new List<string>();
+
                 foreach (var client in _clients)
                 {
-                    if (client.Key != OperationContext.Current.SessionId)
+                    if (((ICommunicationObject) client.Value).State == CommunicationState.Opened)
                     {
-                        if (((ICommunicationObject) client.Value).State == CommunicationState.Opened)
+                        try
                         {
-                            try
-                            {
-                                client.Value.NotifyAboutDatabaseUpdate();
-                            }
-                            catch (Exception)
-                            {
-                                _clients.Remove(client.Key);
-                            }
+                            client.Value.NotifyAboutDatabaseUpdate(entityChangeInfo);
                         }
-                        else
+                        catch (Exception)
                         {
-                            _clients.Remove(client.Key);
+                            clientsToRemove.Add(client.Key);
                         }
                     }
+                    else
+                    {
+                        clientsToRemove.Add(client.Key);
+                    }
+                }
+
+                foreach (string client in clientsToRemove)
+                {
+                    _clients.Remove(client);
                 }
             }
         }

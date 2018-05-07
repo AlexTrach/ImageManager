@@ -10,9 +10,9 @@ namespace ImageManagerWpfClient
 {
     class DeleteTagFromTagsToSearchByCommand : ICommand
     {
-        public event EventHandler CanExecuteChanged;
-
         public SearchImagesByTagsWindowViewModel ViewModel { get; set; }
+
+        public event EventHandler CanExecuteChanged;
 
         public DeleteTagFromTagsToSearchByCommand(SearchImagesByTagsWindowViewModel viewModel)
         {
@@ -32,7 +32,7 @@ namespace ImageManagerWpfClient
             ViewModel.AvailableTags.Add(tagToDelete);
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

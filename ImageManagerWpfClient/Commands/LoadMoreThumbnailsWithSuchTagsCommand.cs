@@ -30,6 +30,7 @@ namespace ImageManagerWpfClient
             if (viewModel.TagsToSearchByChanged)
             {
                 viewModel.TagsToSearchByChanged = false;
+                viewModel.AllAvailableThumbnailsWereLoaded = false;
 
                 viewModel.PreviousTagsToSearchBy.Clear();
                 viewModel.PreviousTagsToSearchBy.AddRange(viewModel.TagsToSearchBy);
@@ -57,17 +58,17 @@ namespace ImageManagerWpfClient
             if (thumbnails.Count != 0)
             {
                 viewModel.CanLoadMore = true;
-                OnCanExecuteChanged(EventArgs.Empty);
                 viewModel.Status = "Ready.";
             }
             else
             {
                 viewModel.CanLoadMore = false;
+                viewModel.AllAvailableThumbnailsWereLoaded = true;
                 viewModel.Status = "All available thumbnails were loaded.";
             }
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

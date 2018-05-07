@@ -25,5 +25,10 @@ namespace ImageManagerWpfClient
             InitializeComponent();
             DataContext = new MainWindowViewModel();
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            ((IDisposable) DataContext).Dispose();
+        }
     }
 }

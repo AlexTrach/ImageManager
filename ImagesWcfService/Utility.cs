@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace ImagesWcfService
+namespace ImagesWcfService.Utilities
 {
     static class Utility
     {
@@ -16,16 +16,21 @@ namespace ImagesWcfService
 
             for (int i = 0; i < thumbnailsToSendToClient.Length; i++)
             {
-                thumbnailsToSendToClient[i] = new Image()
-                {
-                    Id = imagesFromDatabase[i].Id,
-                    ImageName = imagesFromDatabase[i].ImageName,
-                    ImageContent = CreateThumbnailContent(imagesFromDatabase[i].ImageContent, widthOfThumbnail),
-                    Tags = CreateTagsToSendToClient(imagesFromDatabase[i].Tags)
-                };
+                thumbnailsToSendToClient[i] = CreateThumbnailToSendToClient(imagesFromDatabase[i], widthOfThumbnail);
             }
 
             return thumbnailsToSendToClient;
+        }
+
+        public static Image CreateThumbnailToSendToClient(ImagesDal.Image imageFromDatabase, int widthOfThumbnail)
+        {
+            return new Image()
+            {
+                Id = imageFromDatabase.Id,
+                ImageName = imageFromDatabase.ImageName,
+                ImageContent = CreateThumbnailContent(imageFromDatabase.ImageContent, widthOfThumbnail),
+                Tags = CreateTagsToSendToClient(new List<ImagesDal.Tag>(imageFromDatabase.Tags))
+            };
         }
 
         public static byte[] CreateThumbnailContent(byte[] imageContent, int widthOfThumbnail)
@@ -53,21 +58,25 @@ namespace ImagesWcfService
             return thumbnailContent;
         }
 
-        public static Tag[] CreateTagsToSendToClient(ICollection<ImagesDal.Tag> tagsFromDatabase)
+        public static Tag[] CreateTagsToSendToClient(List<ImagesDal.Tag> tagsFromDatabase)
         {
             Tag[] tagsToSendToClient = new Tag[tagsFromDatabase.Count];
 
             for (int i = 0; i < tagsToSendToClient.Length; i++)
             {
-                ImagesDal.Tag tagFromDatabase = tagsFromDatabase.ElementAt(i);
-                tagsToSendToClient[i] = new Tag()
-                {
-                    Id = tagFromDatabase.Id,
-                    TagName = tagFromDatabase.TagName
-                };
+                tagsToSendToClient[i] = CreateTagToSendToClient(tagsFromDatabase[i]);
             }
 
             return tagsToSendToClient;
+        }
+
+        public static Tag CreateTagToSendToClient(ImagesDal.Tag tagFromDatabase)
+        {
+            return new Tag()
+            {
+                Id = tagFromDatabase.Id,
+                TagName = tagFromDatabase.TagName
+            };
         }
 
         public static bool TagArraysAreEqual(Tag[] firstTagArray, Tag[] secondTagArray)

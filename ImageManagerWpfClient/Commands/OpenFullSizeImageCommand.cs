@@ -24,12 +24,15 @@ namespace ImageManagerWpfClient
 
             Image fullSizeImage = ServiceClientWrapper.Instance.GetFullSizeImage(thumbnail.Id);
 
-            ImageOperationsWindow imageOperationsWindow = new ImageOperationsWindow(new ImageOperationsWindowViewModel(fullSizeImage));
-            Application.Current.MainWindow = imageOperationsWindow;
-            imageOperationsWindow.ShowDialog();
+            if (fullSizeImage != null)
+            {
+                ImageOperationsWindow imageOperationsWindow = new ImageOperationsWindow(new ImageOperationsWindowViewModel(fullSizeImage));
+                Application.Current.MainWindow = imageOperationsWindow;
+                imageOperationsWindow.ShowDialog();
+            }
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

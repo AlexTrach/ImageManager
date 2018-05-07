@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageManagerWpfClient"
         mc:Ignorable="d"
-        Title="Image operations" Height="350" Width="525">
+        Title="Image operations" Height="350" Width="525" Closed="Window_Closed">
 
     <Window.Resources>
 
@@ -100,26 +100,26 @@
                                         <Grid>
 
                                             <Ellipse Width="18" 
-                                                                 Height="18" 
-                                                                 Fill="{TemplateBinding Property=Background}"/>
+                                                     Height="18" 
+                                                     Fill="{TemplateBinding Property=Background}"/>
 
                                             <Line Stroke="{TemplateBinding Property=Foreground}" 
-                                                              StrokeThickness="1"
-                                                              X1="0"
-                                                              Y1="0"
-                                                              X2="10"
-                                                              Y2="10"
-                                                              HorizontalAlignment="Center"
-                                                              VerticalAlignment="Center"/>
+                                                  StrokeThickness="1"
+                                                  X1="0"
+                                                  Y1="0"
+                                                  X2="10"
+                                                  Y2="10"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
 
                                             <Line Stroke="{TemplateBinding Property=Foreground}" 
-                                                              StrokeThickness="1"
-                                                              X1="0"
-                                                              Y1="10"
-                                                              X2="10"
-                                                              Y2="0"
-                                                              HorizontalAlignment="Center"
-                                                              VerticalAlignment="Center"/>
+                                                  StrokeThickness="1"
+                                                  X1="0"
+                                                  Y1="10"
+                                                  X2="10"
+                                                  Y2="0"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
 
                                         </Grid>
                                     </ControlTemplate>
@@ -193,7 +193,7 @@
                           Grid.Row="1"
                           Margin="0,2,4,2"
                           Style="{StaticResource TagsItemsControlStyle}"
-                          ItemsSource="{Binding Path=Tags}"/>
+                          ItemsSource="{Binding Path=ImageTags}"/>
 
             <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource LabelStyle}" Content="Available tags:"/>
             <ComboBox x:Name="AvailableTagsComboBox"

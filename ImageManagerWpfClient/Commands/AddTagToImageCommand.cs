@@ -29,13 +29,13 @@ namespace ImageManagerWpfClient
         {
             Tag tagToAdd = (Tag) parameter;
 
-            ViewModel.Tags.Add(tagToAdd);
+            ViewModel.ImageTags.Add(tagToAdd);
             ViewModel.Image.Tags.Add(tagToAdd);
 
             ViewModel.AvailableTags.Remove(tagToAdd);
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

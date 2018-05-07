@@ -20,10 +20,16 @@ namespace ImagesWcfService
         Image[] GetNextThumbnailsWithSuchTags(int numberOfThumbnails, int widthOfThumbnail, Tag[] tags, bool resetToBeginning);
 
         [OperationContract(IsInitiating = false, IsTerminating = false)]
+        Image GetThumbnail(int widthOfThumbnail, int id);
+
+        [OperationContract(IsInitiating = false, IsTerminating = false)]
         Image GetFullSizeImage(int id);
 
         [OperationContract(IsInitiating = false, IsTerminating = false)]
         Tag[] GetAllTags();
+
+        [OperationContract(IsInitiating = false, IsTerminating = false)]
+        Tag GetTag(int id);
 
         [OperationContract(IsOneWay = true, IsInitiating = false, IsTerminating = false)]
         void AddImage(Image image);

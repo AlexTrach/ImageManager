@@ -23,9 +23,10 @@
   </MetadataSources>
   <Metadata>
     <MetadataFile FileName="ImagesService.xsd" MetadataType="Schema" ID="d0afe71c-5046-422e-b03b-5f1d23efdb98" SourceId="1" SourceUrl="http://localhost:8734/ImagesService?xsd=xsd2" />
-    <MetadataFile FileName="ImagesService.wsdl" MetadataType="Wsdl" ID="913f0038-001d-4f05-a0c9-3347b2c66837" SourceId="1" SourceUrl="http://localhost:8734/ImagesService" />
     <MetadataFile FileName="ImagesService1.xsd" MetadataType="Schema" ID="06797fb8-48d2-44f9-9616-387925c6b1b3" SourceId="1" SourceUrl="http://localhost:8734/ImagesService?xsd=xsd1" />
     <MetadataFile FileName="ImagesService2.xsd" MetadataType="Schema" ID="fb007343-3fca-485d-9582-70f91936b550" SourceId="1" SourceUrl="http://localhost:8734/ImagesService?xsd=xsd0" />
+    <MetadataFile FileName="ImagesService1.wsdl" MetadataType="Wsdl" ID="6de8b1a3-0c1f-4d15-9677-ee32ad9422f1" SourceId="1" SourceUrl="http://localhost:8734/ImagesService?wsdl" />
+    <MetadataFile FileName="ImagesService.disco" MetadataType="Disco" ID="b8992c57-228c-411e-95ee-1e683c0ff035" SourceId="1" SourceUrl="http://localhost:8734/ImagesService?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

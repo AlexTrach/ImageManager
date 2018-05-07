@@ -10,9 +10,9 @@ namespace ImageManagerWpfClient
 {
     class SelectTagToUpdateCommand : ICommand
     {
-        public event EventHandler CanExecuteChanged;
-
         public AvailableTagsEditingWindowViewModel ViewModel { get; set; }
+
+        public event EventHandler CanExecuteChanged;
 
         public SelectTagToUpdateCommand(AvailableTagsEditingWindowViewModel viewModel)
         {
@@ -32,7 +32,7 @@ namespace ImageManagerWpfClient
             ViewModel.CanEnterTagNameToUpdate = true;
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

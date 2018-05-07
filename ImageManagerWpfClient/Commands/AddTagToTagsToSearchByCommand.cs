@@ -10,9 +10,9 @@ namespace ImageManagerWpfClient
 {
     class AddTagToTagsToSearchByCommand : ICommand
     {
-        public event EventHandler CanExecuteChanged;
-
         public SearchImagesByTagsWindowViewModel ViewModel { get; set; }
+
+        public event EventHandler CanExecuteChanged;
 
         public AddTagToTagsToSearchByCommand(SearchImagesByTagsWindowViewModel viewModel)
         {
@@ -32,7 +32,7 @@ namespace ImageManagerWpfClient
             ViewModel.AvailableTags.Remove(tagToAdd);
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

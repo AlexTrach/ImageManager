@@ -29,12 +29,12 @@ namespace ImagesWcfServiceClient.Utilities
             {
                 Id = imageFromService.Id,
                 ImageName = imageFromService.ImageName,
-                ImageContent = ConvertByteArrayeToBitmapImage(imageFromService.ImageContent),
+                ImageContent = ConvertByteArrayToBitmapImage(imageFromService.ImageContent),
                 Tags = CreateTags(imageFromService.Tags)
             };
         }
 
-        private static BitmapImage ConvertByteArrayeToBitmapImage(byte[] imageContent)
+        private static BitmapImage ConvertByteArrayToBitmapImage(byte[] imageContent)
         {
             BitmapImage bitmapImage = new BitmapImage();
 

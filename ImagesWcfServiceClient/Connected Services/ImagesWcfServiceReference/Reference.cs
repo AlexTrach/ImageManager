@@ -167,6 +167,108 @@ namespace ImagesWcfServiceClient.ImagesWcfServiceReference {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="EntityChangeInfo", Namespace="http://schemas.datacontract.org/2004/07/ImagesWcfService")]
+    [System.SerializableAttribute()]
+    internal partial class EntityChangeInfo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int EntityIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private ImagesWcfServiceClient.ImagesWcfServiceReference.EntityState EntityStateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private ImagesWcfServiceClient.ImagesWcfServiceReference.EntityType EntityTypeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        internal int EntityId {
+            get {
+                return this.EntityIdField;
+            }
+            set {
+                if ((this.EntityIdField.Equals(value) != true)) {
+                    this.EntityIdField = value;
+                    this.RaisePropertyChanged("EntityId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        internal ImagesWcfServiceClient.ImagesWcfServiceReference.EntityState EntityState {
+            get {
+                return this.EntityStateField;
+            }
+            set {
+                if ((this.EntityStateField.Equals(value) != true)) {
+                    this.EntityStateField = value;
+                    this.RaisePropertyChanged("EntityState");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        internal ImagesWcfServiceClient.ImagesWcfServiceReference.EntityType EntityType {
+            get {
+                return this.EntityTypeField;
+            }
+            set {
+                if ((this.EntityTypeField.Equals(value) != true)) {
+                    this.EntityTypeField = value;
+                    this.RaisePropertyChanged("EntityType");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="EntityState", Namespace="http://schemas.datacontract.org/2004/07/ImagesWcfService")]
+    internal enum EntityState : int {
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Added = 0,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Modified = 1,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Deleted = 2,
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="EntityType", Namespace="http://schemas.datacontract.org/2004/07/ImagesWcfService")]
+    internal enum EntityType : int {
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Image = 0,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Tag = 1,
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ImagesWcfServiceReference.IImagesService", CallbackContract=typeof(ImagesWcfServiceClient.ImagesWcfServiceReference.IImagesServiceCallback), SessionMode=System.ServiceModel.SessionMode.Required)]
     internal interface IImagesService {
@@ -189,6 +291,12 @@ namespace ImagesWcfServiceClient.ImagesWcfServiceReference {
         [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IImagesService/GetNextThumbnailsWithSuchTags", ReplyAction="http://tempuri.org/IImagesService/GetNextThumbnailsWithSuchTagsResponse")]
         System.Threading.Tasks.Task<ImagesWcfServiceClient.ImagesWcfServiceReference.Image[]> GetNextThumbnailsWithSuchTagsAsync(int numberOfThumbnails, int widthOfThumbnail, ImagesWcfServiceClient.ImagesWcfServiceReference.Tag[] tags, bool resetToBeginning);
         
+        [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IImagesService/GetThumbnail", ReplyAction="http://tempuri.org/IImagesService/GetThumbnailResponse")]
+        ImagesWcfServiceClient.ImagesWcfServiceReference.Image GetThumbnail(int widthOfThumbnail, int id);
+        
+        [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IImagesService/GetThumbnail", ReplyAction="http://tempuri.org/IImagesService/GetThumbnailResponse")]
+        System.Threading.Tasks.Task<ImagesWcfServiceClient.ImagesWcfServiceReference.Image> GetThumbnailAsync(int widthOfThumbnail, int id);
+        
         [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IImagesService/GetFullSizeImage", ReplyAction="http://tempuri.org/IImagesService/GetFullSizeImageResponse")]
         ImagesWcfServiceClient.ImagesWcfServiceReference.Image GetFullSizeImage(int id);
         
@@ -200,6 +308,12 @@ namespace ImagesWcfServiceClient.ImagesWcfServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IImagesService/GetAllTags", ReplyAction="http://tempuri.org/IImagesService/GetAllTagsResponse")]
         System.Threading.Tasks.Task<ImagesWcfServiceClient.ImagesWcfServiceReference.Tag[]> GetAllTagsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IImagesService/GetTag", ReplyAction="http://tempuri.org/IImagesService/GetTagResponse")]
+        ImagesWcfServiceClient.ImagesWcfServiceReference.Tag GetTag(int id);
+        
+        [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IImagesService/GetTag", ReplyAction="http://tempuri.org/IImagesService/GetTagResponse")]
+        System.Threading.Tasks.Task<ImagesWcfServiceClient.ImagesWcfServiceReference.Tag> GetTagAsync(int id);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, IsInitiating=false, Action="http://tempuri.org/IImagesService/AddImage")]
         void AddImage(ImagesWcfServiceClient.ImagesWcfServiceReference.Image image);
@@ -248,7 +362,7 @@ namespace ImagesWcfServiceClient.ImagesWcfServiceReference {
     internal interface IImagesServiceCallback {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IImagesService/NotifyAboutDatabaseUpdate")]
-        void NotifyAboutDatabaseUpdate();
+        void NotifyAboutDatabaseUpdate(ImagesWcfServiceClient.ImagesWcfServiceReference.EntityChangeInfo entityChangeInfo);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -303,6 +417,14 @@ namespace ImagesWcfServiceClient.ImagesWcfServiceReference {
             return base.Channel.GetNextThumbnailsWithSuchTagsAsync(numberOfThumbnails, widthOfThumbnail, tags, resetToBeginning);
         }
         
+        public ImagesWcfServiceClient.ImagesWcfServiceReference.Image GetThumbnail(int widthOfThumbnail, int id) {
+            return base.Channel.GetThumbnail(widthOfThumbnail, id);
+        }
+        
+        public System.Threading.Tasks.Task<ImagesWcfServiceClient.ImagesWcfServiceReference.Image> GetThumbnailAsync(int widthOfThumbnail, int id) {
+            return base.Channel.GetThumbnailAsync(widthOfThumbnail, id);
+        }
+        
         public ImagesWcfServiceClient.ImagesWcfServiceReference.Image GetFullSizeImage(int id) {
             return base.Channel.GetFullSizeImage(id);
         }
@@ -317,6 +439,14 @@ namespace ImagesWcfServiceClient.ImagesWcfServiceReference {
         
         public System.Threading.Tasks.Task<ImagesWcfServiceClient.ImagesWcfServiceReference.Tag[]> GetAllTagsAsync() {
             return base.Channel.GetAllTagsAsync();
+        }
+        
+        public ImagesWcfServiceClient.ImagesWcfServiceReference.Tag GetTag(int id) {
+            return base.Channel.GetTag(id);
+        }
+        
+        public System.Threading.Tasks.Task<ImagesWcfServiceClient.ImagesWcfServiceReference.Tag> GetTagAsync(int id) {
+            return base.Channel.GetTagAsync(id);
         }
         
         public void AddImage(ImagesWcfServiceClient.ImagesWcfServiceReference.Image image) {

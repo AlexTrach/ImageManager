@@ -51,6 +51,12 @@
   <wsdl:message name="IImagesService_GetNextThumbnailsWithSuchTags_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetNextThumbnailsWithSuchTagsResponse" />
   </wsdl:message>
+  <wsdl:message name="IImagesService_GetThumbnail_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetThumbnail" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetThumbnail_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetThumbnailResponse" />
+  </wsdl:message>
   <wsdl:message name="IImagesService_GetFullSizeImage_InputMessage">
     <wsdl:part name="parameters" element="tns:GetFullSizeImage" />
   </wsdl:message>
@@ -62,6 +68,12 @@
   </wsdl:message>
   <wsdl:message name="IImagesService_GetAllTags_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetAllTagsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetTag_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTag" />
+  </wsdl:message>
+  <wsdl:message name="IImagesService_GetTag_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTagResponse" />
   </wsdl:message>
   <wsdl:message name="IImagesService_AddImage_InputMessage">
     <wsdl:part name="parameters" element="tns:AddImage" />
@@ -99,6 +111,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetNextThumbnailsWithSuchTags" message="tns:IImagesService_GetNextThumbnailsWithSuchTags_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetNextThumbnailsWithSuchTagsResponse" message="tns:IImagesService_GetNextThumbnailsWithSuchTags_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetThumbnail">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetThumbnail" message="tns:IImagesService_GetThumbnail_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetThumbnailResponse" message="tns:IImagesService_GetThumbnail_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetFullSizeImage">
       <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetFullSizeImage" message="tns:IImagesService_GetFullSizeImage_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetFullSizeImageResponse" message="tns:IImagesService_GetFullSizeImage_OutputMessage" />
@@ -106,6 +122,10 @@
     <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetAllTags">
       <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetAllTags" message="tns:IImagesService_GetAllTags_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetAllTagsResponse" message="tns:IImagesService_GetAllTags_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="GetTag">
+      <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/GetTag" message="tns:IImagesService_GetTag_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IImagesService/GetTagResponse" message="tns:IImagesService_GetTag_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation msc:isInitiating="false" msc:isTerminating="false" name="AddImage">
       <wsdl:input wsaw:Action="http://tempuri.org/IImagesService/AddImage" message="tns:IImagesService_AddImage_InputMessage" />
@@ -159,6 +179,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetThumbnail">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/GetThumbnail" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetFullSizeImage">
       <soap12:operation soapAction="http://tempuri.org/IImagesService/GetFullSizeImage" style="document" />
       <wsdl:input>
@@ -170,6 +199,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAllTags">
       <soap12:operation soapAction="http://tempuri.org/IImagesService/GetAllTags" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTag">
+      <soap12:operation soapAction="http://tempuri.org/IImagesService/GetTag" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

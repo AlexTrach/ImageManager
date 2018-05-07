@@ -23,7 +23,7 @@ namespace ImageManagerWpfClient
             searchImagesByTagsWindow.ShowDialog();
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

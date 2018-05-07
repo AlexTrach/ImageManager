@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ImageManagerWpfClient"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="ImageManagerWpfClient.MainWindow"
         mc:Ignorable="d"
-        Title="ImageManager" Height="350" Width="525">
+        Title="ImageManager" Height="350" Width="525" Closed="Window_Closed">
     <DockPanel>
         
         <Menu DockPanel.Dock="Top">

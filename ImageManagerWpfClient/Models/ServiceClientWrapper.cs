@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImagesWcfServiceClient;
 using ImagesWcfServiceClient.Models;
+using ImagesWcfServiceClient.DatabaseUpdateNotificaionInfrastructure;
 
 namespace ImageManagerWpfClient
 {
@@ -24,16 +25,30 @@ namespace ImageManagerWpfClient
             _serviceClient = new ServiceClient(this);
         }
 
-        public event EventHandler DatabaseUpdated;
+        public event EventHandler<ImageChangedEventArgs> ImageChanged;
+        public event EventHandler<TagChangedEventArgs> TagChanged;
 
-        void IDatabaseUpdateListener.ImagesServiceCallback_DatabaseUpdated(object sender, EventArgs e)
+        void IDatabaseUpdateListener.ImagesServiceCallback_DatabaseUpdated(object sender, DatabaseUpdatedEventArgs e)
         {
-            OnDatabaseUpdated(EventArgs.Empty);
+            switch (e.EntityType)
+            {
+                case EntityType.Image:
+                    OnImageChanged(new ImageChangedEventArgs(e.EntityId, e.EntityState));
+                    break;
+                case EntityType.Tag:
+                    OnTagChanged(new TagChangedEventArgs(e.EntityId, e.EntityState));
+                    break;
+            }
         }
 
-        protected void OnDatabaseUpdated(EventArgs e)
+        protected virtual void OnImageChanged(ImageChangedEventArgs e)
         {
-            DatabaseUpdated(this, e);
+            ImageChanged?.Invoke(this, e);
+        }
+
+        protected virtual void OnTagChanged(TagChangedEventArgs e)
+        {
+            TagChanged?.Invoke(this, e);
         }
 
         public List<Image> GetNextThumbnails(bool resetToBeginning)
@@ -46,6 +61,11 @@ namespace ImageManagerWpfClient
             return _serviceClient.GetNextThumbnailsWithSuchTags(tags, resetToBeginning);
         }
 
+        public Image GetThumbnail(int id)
+        {
+            return _serviceClient.GetThumbnail(id);
+        }
+
         public Image GetFullSizeImage(int id)
         {
             return _serviceClient.GetFullSizeImage(id);
@@ -54,6 +74,11 @@ namespace ImageManagerWpfClient
         public List<Tag> GetAllTags()
         {
             return _serviceClient.GetAllTags();
+        }
+
+        public Tag GetTag(int id)
+        {
+            return _serviceClient.GetTag(id);
         }
 
         public void AddImage(Image image)

@@ -24,5 +24,10 @@ namespace ImageManagerWpfClient
             InitializeComponent();
             DataContext = new SearchImagesByTagsWindowViewModel();
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            ((IDisposable) DataContext).Dispose();
+        }
     }
 }

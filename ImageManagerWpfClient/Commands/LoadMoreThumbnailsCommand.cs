@@ -41,11 +41,12 @@ namespace ImageManagerWpfClient
             }
             else
             {
+                viewModel.AllAvailableThumbnailsWereLoaded = true;
                 viewModel.Status = "All available thumbnails were loaded.";
             }
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

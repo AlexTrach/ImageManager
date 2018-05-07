@@ -15,7 +15,7 @@ namespace ImageManagerWpfClient
     {
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            //ServiceClientWrapper.Instance.Dispose();
+            ServiceClientWrapper.Instance.Dispose();
         }
     }
 }

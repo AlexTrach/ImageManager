@@ -8,10 +8,11 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
 using ImagesWcfServiceClient.Models;
+using ImagesWcfServiceClient.DatabaseUpdateNotificaionInfrastructure;
 
 namespace ImageManagerWpfClient
 {
-    class AvailableTagsEditingWindowViewModel : INotifyPropertyChanged, IDataErrorInfo
+    class AvailableTagsEditingWindowViewModel : INotifyPropertyChanged, IDataErrorInfo, IDisposable
     {
         public ICommand AddTagCommand { get; set; } = new AddTagCommand();
         public ICommand SelectTagToUpdateCommand { get; set; }
@@ -113,12 +114,15 @@ namespace ImageManagerWpfClient
             {
                 AvailableTags.Add(tag);
             }
+
+            ServiceClientWrapper.Instance.TagChanged += ServiceClientWrapper_TagChanged;
+
             AvailableTags.CollectionChanged += AvailableTags_CollectionChanged;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
@@ -227,6 +231,70 @@ namespace ImageManagerWpfClient
         {
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(TagNameToAdd)));
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(TagNameToUpdate)));
+        }
+
+        private async void ServiceClientWrapper_TagChanged(object sender, TagChangedEventArgs e)
+        {
+            switch (e.EntityState)
+            {
+                case EntityState.Added:
+                    Tag tagToAdd = await Task.Factory.StartNew(() => ServiceClientWrapper.Instance.GetTag(e.Id));
+                    if (tagToAdd != null)
+                    {
+                        AvailableTags.Add(tagToAdd);
+                    }
+                    break;
+                case EntityState.Modified:
+                    for (int i = 0; i < AvailableTags.Count; i++)
+                    {
+                        if (AvailableTags[i].Id == e.Id)
+                        {
+                            Tag tag = await Task.Factory.StartNew(() => ServiceClientWrapper.Instance.GetTag(e.Id));
+                            if (tag != null)
+                            {
+                                AvailableTags.RemoveAt(i);
+                                AvailableTags.Insert(i, tag);
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                case EntityState.Deleted:
+                    foreach (Tag tag in AvailableTags)
+                    {
+                        if (tag.Id == e.Id)
+                        {
+                            AvailableTags.Remove(tag);
+                            break;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private bool _disposed = false;
+
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void CleanUp(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    ServiceClientWrapper.Instance.TagChanged -= ServiceClientWrapper_TagChanged;
+                }
+            }
+            _disposed = true;
+        }
+
+        ~AvailableTagsEditingWindowViewModel()
+        {
+            CleanUp(false);
         }
     }
 }

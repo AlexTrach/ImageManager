@@ -38,7 +38,7 @@ namespace ImagesWcfServiceClient
             {
                 List<Image> thumbnails = Utility.CreateImages(_client.GetNextThumbnails(NUMBER_OF_THUMBNAILS, WIDTH_OF_THUMBNAIL, resetToBeginning));
 
-                if (thumbnails.Count < NUMBER_OF_THUMBNAILS)
+                if (thumbnails.Count == 0)
                 {
                     _receivedAllAvailableThumbnails = true;
                 }
@@ -72,7 +72,7 @@ namespace ImagesWcfServiceClient
                 {
                     List<Image> thumbnails = Utility.CreateImages(_client.GetNextThumbnailsWithSuchTags(NUMBER_OF_THUMBNAILS, WIDTH_OF_THUMBNAIL, Utility.CreateTagsToSendToService(tags), resetToBeginning));
 
-                    if (thumbnails.Count < NUMBER_OF_THUMBNAILS)
+                    if (thumbnails.Count == 0)
                     {
                         _receivedAllAvailableThumbnailsWithSuchTags = true;
                     }
@@ -89,15 +89,49 @@ namespace ImagesWcfServiceClient
                 throw new ArgumentException("List of tags must not be null and must not be empty.");
             }
         }
+
+        public Image GetThumbnail(int id)
+        {
+            ImagesWcfServiceReference.Image thumbnailFromService = _client.GetThumbnail(WIDTH_OF_THUMBNAIL, id);
+            if (thumbnailFromService == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Utility.CreateImage(thumbnailFromService);
+            }
+        }
         
         public Image GetFullSizeImage(int id)
         {
-            return Utility.CreateImage(_client.GetFullSizeImage(id));
+            ImagesWcfServiceReference.Image imageFromService = _client.GetFullSizeImage(id);
+            if (imageFromService == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Utility.CreateImage(imageFromService);
+            }
         }
         
         public List<Tag> GetAllTags()
         {
             return Utility.CreateTags(_client.GetAllTags());
+        }
+
+        public Tag GetTag(int id)
+        {
+            ImagesWcfServiceReference.Tag tagFromService = _client.GetTag(id);
+            if (tagFromService == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Utility.CreateTag(tagFromService);
+            }
         }
         
         public void AddImage(Image image)

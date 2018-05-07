@@ -26,7 +26,7 @@ namespace ImageManagerWpfClient
             Task.Factory.StartNew(() => ServiceClientWrapper.Instance.UpdateImage(viewModel.Image));
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

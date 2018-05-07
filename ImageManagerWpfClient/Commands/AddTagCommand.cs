@@ -25,15 +25,9 @@ namespace ImageManagerWpfClient
             viewModel.TagNameToAdd = null;
             
             ServiceClientWrapper.Instance.AddTag(tagToAdd);
-
-            viewModel.AvailableTags.Clear();
-            foreach (Tag tag in ServiceClientWrapper.Instance.GetAllTags())
-            {
-                viewModel.AvailableTags.Add(tag);
-            }
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }

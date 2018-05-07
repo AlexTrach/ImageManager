@@ -82,6 +82,8 @@
     <Compile Include="Commands\SearchImagesByTagsCommand.cs" />
     <Compile Include="Commands\LoadMoreThumbnailsWithSuchTagsCommand.cs" />
     <Compile Include="Commands\DeleteTagFromTagsToSearchByCommand.cs" />
+    <Compile Include="Models\ImageChangedEventArgs.cs" />
+    <Compile Include="Models\TagChangedEventArgs.cs" />
     <Compile Include="ViewModels\SearchImagesByTagsWindowViewModel.cs" />
     <Compile Include="Views\SearchImagesByTagsWindow.xaml.cs">
       <DependentUpon>SearchImagesByTagsWindow.xaml</DependentUpon>

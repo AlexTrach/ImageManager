@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace ImagesDal
 {
@@ -49,12 +50,20 @@ namespace ImagesDal
 
         public Image GetOneImage(int id)
         {
-            return Context.Images.Find(id);
+            Image image = Context.Images.Find(id);
+            Context.Entry(image).Reload();
+            return image;
         }
 
         public Task<Image> GetOneImageAsync(int id)
         {
-            return Context.Images.FindAsync(id);
+            return Task.Factory.StartNew(() =>
+            {
+                Image image = Context.Images.Find(id);
+                Context.Entry(image).State = EntityState.Detached;
+                Context.Images.Attach(image);
+                return image;
+            });
         }
 
         public List<Image> GetAllImages()
@@ -145,12 +154,20 @@ namespace ImagesDal
 
         public Tag GetOneTag(int id)
         {
-            return Context.Tags.Find(id);
+            Tag tag = Context.Tags.Find(id);
+            Context.Entry(tag).Reload();
+            return tag;
         }
 
         public Task<Tag> GetOneTagAsync(int id)
         {
-            return Context.Tags.FindAsync(id);
+            return Task.Factory.StartNew(() =>
+            {
+                Tag tag = Context.Tags.Find(id);
+                Context.Entry(tag).State = EntityState.Detached;
+                Context.Tags.Attach(tag);
+                return tag;
+            });
         }
 
         public List<Tag> GetAllTags()
@@ -179,6 +196,10 @@ namespace ImagesDal
             {
                 return Context.SaveChanges();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                return 0;
+            }
             catch (Exception)
             {
                 throw;
@@ -190,6 +211,10 @@ namespace ImagesDal
             try
             {
                 return await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return 0;
             }
             catch (Exception)
             {

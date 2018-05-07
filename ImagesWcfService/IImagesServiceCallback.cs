@@ -10,6 +10,6 @@ namespace ImagesWcfService
     public interface IImagesServiceCallback
     {
         [OperationContract(IsOneWay = true)]
-        void NotifyAboutDatabaseUpdate();
+        void NotifyAboutDatabaseUpdate(EntityChangeInfo entityChangeInfo);
     }
 }

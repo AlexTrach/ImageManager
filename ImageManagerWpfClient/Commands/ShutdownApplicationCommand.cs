@@ -22,7 +22,7 @@ namespace ImageManagerWpfClient
             Application.Current.Shutdown();
         }
 
-        protected void OnCanExecuteChanged(EventArgs e)
+        protected virtual void OnCanExecuteChanged(EventArgs e)
         {
             CanExecuteChanged(this, e);
         }
