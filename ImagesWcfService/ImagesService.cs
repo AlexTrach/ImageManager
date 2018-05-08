@@ -6,15 +6,14 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using ImagesWcfService.Utilities;
+using System.Data.Entity.Infrastructure;
 
 namespace ImagesWcfService
 {
-    public class ImagesService : IImagesService, IDisposable
+    public class ImagesService : IImagesService
     {
         private static Dictionary<string, IImagesServiceCallback> _clients = new Dictionary<string, IImagesServiceCallback>();
         private static object _clientsSyncObject = new object();
-
-        private ImagesDal.ImagesRepository _imagesRepository = new ImagesDal.ImagesRepository();
 
         private int _numberOfSentThumbnails;
 
@@ -31,172 +30,247 @@ namespace ImagesWcfService
 
         public Image[] GetNextThumbnails(int numberOfThumbnails, int widthOfThumbnail, bool resetToBeginning)
         {
-            if (resetToBeginning)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                _numberOfSentThumbnails = 0;
-            }
+                if (resetToBeginning)
+                {
+                    _numberOfSentThumbnails = 0;
+                }
 
-            List<ImagesDal.Image> imagesFromDatabase = _imagesRepository.GetSpecifiedRangeOfImages(_numberOfSentThumbnails, numberOfThumbnails);
-            _numberOfSentThumbnails += imagesFromDatabase.Count;
+                List<ImagesDal.Image> imagesFromDatabase = imagesContext.Images.OrderBy(image => image.Id).Skip(_numberOfSentThumbnails).Take(numberOfThumbnails).ToList();
+                _numberOfSentThumbnails += imagesFromDatabase.Count;
 
-            return Utility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
+                return DatabaseToServiceConversionUtility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
+            } 
         }
 
         public Image[] GetNextThumbnailsWithSuchTags(int numberOfThumbnails, int widthOfThumbnail, Tag[] tags, bool resetToBeginning)
         {
-            if (resetToBeginning)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                _numberOfSentThumbnailsWithSpecifiedTags = 0;
-            }
-
-            if (!Utility.TagArraysAreEqual(_previousTagsToSearchBy, tags))
-            {
-                _previousTagsToSearchBy = new Tag[tags.Length];
-                for (int i = 0; i < tags.Length; i++)
+                if (resetToBeginning)
                 {
-                    _previousTagsToSearchBy[i] = tags[i];
+                    _numberOfSentThumbnailsWithSpecifiedTags = 0;
                 }
 
-                _numberOfSentThumbnailsWithSpecifiedTags = 0;
+                if (!Utility.TagArraysAreEqual(_previousTagsToSearchBy, tags))
+                {
+                    _previousTagsToSearchBy = new Tag[tags.Length];
+                    for (int i = 0; i < tags.Length; i++)
+                    {
+                        _previousTagsToSearchBy[i] = tags[i];
+                    }
+
+                    _numberOfSentThumbnailsWithSpecifiedTags = 0;
+                }
+
+                int[] ids = new int[tags.Length];
+                for (int i = 0; i < tags.Length; i++)
+                {
+                    ids[i] = tags[i].Id;
+                }
+
+                IQueryable<ImagesDal.Tag> tagsToSearchBy = imagesContext.Tags.Where(tagToSearchBy => ids.Contains(tagToSearchBy.Id));
+
+                IQueryable<ImagesDal.Image> queryResult = imagesContext.Images.Where(image => image.Tags.Intersect(tagsToSearchBy).Count() == tagsToSearchBy.Count());
+                
+                List<ImagesDal.Image> imagesFromDatabase = queryResult.OrderBy(image => image.Id).Skip(_numberOfSentThumbnailsWithSpecifiedTags).Take(numberOfThumbnails).ToList();
+                _numberOfSentThumbnailsWithSpecifiedTags += imagesFromDatabase.Count;
+
+                return DatabaseToServiceConversionUtility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
             }
-
-            List<ImagesDal.Tag> tagsToSearchBy = new List<ImagesDal.Tag>();
-            foreach (Tag tag in tags)
-            {
-                tagsToSearchBy.Add(_imagesRepository.GetOneTag(tag.Id));
-            }
-
-            List<ImagesDal.Image> imagesFromDatabase = _imagesRepository.GetSpecifiedRangeFromImagesWithSuchTags(_numberOfSentThumbnailsWithSpecifiedTags, numberOfThumbnails, tagsToSearchBy);
-            _numberOfSentThumbnailsWithSpecifiedTags += imagesFromDatabase.Count;
-
-            return Utility.CreateThumnailsToSendToClient(imagesFromDatabase, widthOfThumbnail);
         }
 
         public Image GetThumbnail(int widthOfThumbnail, int id)
         {
-            ImagesDal.Image imageFromDatabase = _imagesRepository.GetOneImage(id);
-            if (imageFromDatabase == null)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                return null;
+                ImagesDal.Image imageFromDatabase = imagesContext.Images.Find(id);
+                if (imageFromDatabase == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return DatabaseToServiceConversionUtility.CreateThumbnailToSendToClient(imageFromDatabase, widthOfThumbnail);
+                }
             }
-            else
-            {
-                return Utility.CreateThumbnailToSendToClient(imageFromDatabase, widthOfThumbnail);
-            }   
         }
 
         public Image GetFullSizeImage(int id)
         {
-            ImagesDal.Image imageFromDatabase = _imagesRepository.GetOneImage(id);
-            if (imageFromDatabase == null)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                return null;
-            }
-            else
-            {
-                return new Image()
+                ImagesDal.Image imageFromDatabase = imagesContext.Images.Find(id);
+                if (imageFromDatabase == null)
                 {
-                    Id = imageFromDatabase.Id,
-                    ImageName = imageFromDatabase.ImageName,
-                    ImageContent = imageFromDatabase.ImageContent,
-                    Tags = Utility.CreateTagsToSendToClient(new List<ImagesDal.Tag>(imageFromDatabase.Tags))
-                };
+                    return null;
+                }
+                else
+                {
+                    return new Image()
+                    {
+                        Id = imageFromDatabase.Id,
+                        ImageName = imageFromDatabase.ImageName,
+                        ImageContent = imageFromDatabase.ImageContent,
+                        Tags = DatabaseToServiceConversionUtility.CreateTagsToSendToClient(new List<ImagesDal.Tag>(imageFromDatabase.Tags))
+                    };
+                }
             }
         }
 
         
         public Tag[] GetAllTags()
         {
-            return Utility.CreateTagsToSendToClient(_imagesRepository.GetAllTags());
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
+            {
+                return DatabaseToServiceConversionUtility.CreateTagsToSendToClient(imagesContext.Tags.ToList());
+            }
         }
 
         public Tag GetTag(int id)
         {
-            ImagesDal.Tag tagFromDatabase = _imagesRepository.GetOneTag(id);
-            if (tagFromDatabase == null)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                return null;
-            }
-            else
-            {
-                return Utility.CreateTagToSendToClient(tagFromDatabase);
+                ImagesDal.Tag tagFromDatabase = imagesContext.Tags.Find(id);
+                if (tagFromDatabase == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return DatabaseToServiceConversionUtility.CreateTagToSendToClient(tagFromDatabase);
+                }
             }
         }
 
         public void AddImage(Image image)
         {
-            ImagesDal.Image imageToAdd = new ImagesDal.Image()
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                ImageName = image.ImageName,
-                ImageContent = image.ImageContent,  
-            };
-            foreach (Tag tag in image.Tags)
-            {
-                ImagesDal.Tag tagToAddToImage = _imagesRepository.GetOneTag(tag.Id);
-                imageToAdd.Tags.Add(tagToAddToImage);
+                ImagesDal.Image imageToAdd = new ImagesDal.Image()
+                {
+                    ImageName = image.ImageName,
+                    ImageContent = image.ImageContent,
+                };
+                foreach (Tag tag in image.Tags)
+                {
+                    ImagesDal.Tag tagToAddToImage = imagesContext.Tags.Find(tag.Id);
+                    if (tagToAddToImage != null)
+                    {
+                        imageToAdd.Tags.Add(tagToAddToImage);
+                    }
+                }
+
+                imagesContext.Images.Add(imageToAdd);
+                if (SaveChanges(imagesContext) != 0)
+                {
+                    NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(imageToAdd.Id, EntityType.Image, EntityState.Added));
+                }
             }
-
-            _imagesRepository.AddImage(imageToAdd);
-
-            NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(imageToAdd.Id, EntityType.Image, EntityState.Added));
         }
 
         public void UpdateImage(Image image)
         {
-            ImagesDal.Image imageToUpdate = _imagesRepository.GetOneImage(image.Id);
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
+            {
+                ImagesDal.Image imageToUpdate = imagesContext.Images.Find(image.Id);
 
-            imageToUpdate.ImageName = image.ImageName;
-            imageToUpdate.ImageContent = image.ImageContent;
-            imageToUpdate.Tags.Clear();
-            foreach (Tag tag in image.Tags)
-            {
-                ImagesDal.Tag tagToAddToImage = _imagesRepository.GetOneTag(tag.Id);
-                imageToUpdate.Tags.Add(tagToAddToImage);
-            }
- 
-            if (_imagesRepository.UpdateImage(imageToUpdate) != 0)
-            {
-                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(imageToUpdate.Id, EntityType.Image, EntityState.Modified));
+                if (imageToUpdate != null)
+                {
+                    imageToUpdate.ImageName = image.ImageName;
+                    imageToUpdate.ImageContent = image.ImageContent;
+                    imageToUpdate.Tags.Clear();
+                    foreach (Tag tag in image.Tags)
+                    {
+                        ImagesDal.Tag tagToAddToImage = imagesContext.Tags.Find(tag.Id);
+                        if (tagToAddToImage != null)
+                        {
+                            imageToUpdate.Tags.Add(tagToAddToImage);
+                        }
+                    }
+
+                    if (SaveChanges(imagesContext) != 0)
+                    {
+                        NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(imageToUpdate.Id, EntityType.Image, EntityState.Modified));
+                    }
+                }
             }
         }
 
         public void DeleteImage(int id)
         {
-            if (_imagesRepository.DeleteImage(id) != 0)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(id, EntityType.Image, EntityState.Deleted));
+                imagesContext.Entry(new ImagesDal.Image() { Id = id }).State = System.Data.Entity.EntityState.Deleted;
+                if (SaveChanges(imagesContext) != 0)
+                {
+                    NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(id, EntityType.Image, EntityState.Deleted));
+                }
             }
         }
 
         public void AddTag(Tag tag)
         {
-            ImagesDal.Tag tagToAdd = new ImagesDal.Tag()
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                TagName = tag.TagName
-            };
+                ImagesDal.Tag tagToAdd = new ImagesDal.Tag()
+                {
+                    TagName = tag.TagName
+                };
 
-            _imagesRepository.AddTag(tagToAdd);
-
-            NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(tagToAdd.Id, EntityType.Tag, EntityState.Added));
+                imagesContext.Tags.Add(tagToAdd);
+                if (SaveChanges(imagesContext) != 0)
+                {
+                    NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(tagToAdd.Id, EntityType.Tag, EntityState.Added));
+                }
+            }
         }
 
         public void UpdateTag(Tag tag)
         {
-            ImagesDal.Tag tagToUpdate = _imagesRepository.GetOneTag(tag.Id);
-
-            tagToUpdate.TagName = tag.TagName;
-
-            if (_imagesRepository.UpdateTag(tagToUpdate) != 0)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(tagToUpdate.Id, EntityType.Tag, EntityState.Modified));
+                ImagesDal.Tag tagToUpdate = imagesContext.Tags.Find(tag.Id);
+
+                if (tagToUpdate != null)
+                {
+                    tagToUpdate.TagName = tag.TagName;
+
+                    imagesContext.Entry(tagToUpdate).State = System.Data.Entity.EntityState.Modified;
+                    if (SaveChanges(imagesContext) != 0)
+                    {
+                        NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(tagToUpdate.Id, EntityType.Tag, EntityState.Modified));
+                    }
+                }
             }
         }
 
         public void DeleteTag(int id)
         {
-            if (_imagesRepository.DeleteTag(id) != 0)
+            using (ImagesDal.ImagesContext imagesContext = new ImagesDal.ImagesContext())
             {
-                NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(id, EntityType.Tag, EntityState.Deleted));
+                imagesContext.Entry(new ImagesDal.Tag() { Id = id }).State = System.Data.Entity.EntityState.Deleted;
+                if (SaveChanges(imagesContext) != 0)
+                {
+                    NotifyOtherClientsAboutDatabaseUpdate(new EntityChangeInfo(id, EntityType.Tag, EntityState.Deleted));
+                }
+            }
+        }
+        
+        private int SaveChanges(ImagesDal.ImagesContext imagesContext)
+        {
+            try
+            {
+                return imagesContext.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return 0;
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 
@@ -238,31 +312,6 @@ namespace ImagesWcfService
                     _clients.Remove(client);
                 }
             }
-        }
-
-        private bool _disposed = false;
-
-        public void Dispose()
-        {
-            CleanUp(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void CleanUp(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _imagesRepository.Dispose();
-                }
-            }
-            _disposed = true;
-        }
-
-        ~ImagesService()
-        {
-            CleanUp(false);
         }
     }
 }

@@ -75,7 +75,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImagesService.cs" />
     <Compile Include="DataContracts\Tag.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="Utilities\DatabaseToServiceConversionUtility.cs" />
+    <Compile Include="Utilities\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

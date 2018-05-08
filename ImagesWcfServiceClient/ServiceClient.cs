@@ -36,7 +36,7 @@ namespace ImagesWcfServiceClient
 
             if (!_receivedAllAvailableThumbnails)
             {
-                List<Image> thumbnails = Utility.CreateImages(_client.GetNextThumbnails(NUMBER_OF_THUMBNAILS, WIDTH_OF_THUMBNAIL, resetToBeginning));
+                List<Image> thumbnails = ServiceToClientConversionUtility.CreateImages(_client.GetNextThumbnails(NUMBER_OF_THUMBNAILS, WIDTH_OF_THUMBNAIL, resetToBeginning));
 
                 if (thumbnails.Count == 0)
                 {
@@ -70,7 +70,7 @@ namespace ImagesWcfServiceClient
             {
                 if (!_receivedAllAvailableThumbnailsWithSuchTags)
                 {
-                    List<Image> thumbnails = Utility.CreateImages(_client.GetNextThumbnailsWithSuchTags(NUMBER_OF_THUMBNAILS, WIDTH_OF_THUMBNAIL, Utility.CreateTagsToSendToService(tags), resetToBeginning));
+                    List<Image> thumbnails = ServiceToClientConversionUtility.CreateImages(_client.GetNextThumbnailsWithSuchTags(NUMBER_OF_THUMBNAILS, WIDTH_OF_THUMBNAIL, ClientToServiceConversionUtility.CreateTagsToSendToService(tags), resetToBeginning));
 
                     if (thumbnails.Count == 0)
                     {
@@ -99,7 +99,7 @@ namespace ImagesWcfServiceClient
             }
             else
             {
-                return Utility.CreateImage(thumbnailFromService);
+                return ServiceToClientConversionUtility.CreateImage(thumbnailFromService);
             }
         }
         
@@ -112,13 +112,13 @@ namespace ImagesWcfServiceClient
             }
             else
             {
-                return Utility.CreateImage(imageFromService);
+                return ServiceToClientConversionUtility.CreateImage(imageFromService);
             }
         }
         
         public List<Tag> GetAllTags()
         {
-            return Utility.CreateTags(_client.GetAllTags());
+            return ServiceToClientConversionUtility.CreateTags(_client.GetAllTags());
         }
 
         public Tag GetTag(int id)
@@ -130,18 +130,18 @@ namespace ImagesWcfServiceClient
             }
             else
             {
-                return Utility.CreateTag(tagFromService);
+                return ServiceToClientConversionUtility.CreateTag(tagFromService);
             }
         }
         
         public void AddImage(Image image)
         {
-            _client.AddImage(Utility.CreateImageToSendToService(image));
+            _client.AddImage(ClientToServiceConversionUtility.CreateImageToSendToService(image));
         }
         
         public void UpdateImage(Image image)
         {
-            _client.UpdateImage(Utility.CreateImageToSendToService(image));
+            _client.UpdateImage(ClientToServiceConversionUtility.CreateImageToSendToService(image));
         }
 
         public void DeleteImage(Image image)
@@ -151,12 +151,12 @@ namespace ImagesWcfServiceClient
         
         public void AddTag(Tag tag)
         {
-            _client.AddTag(Utility.CreateTagToSendToService(tag));
+            _client.AddTag(ClientToServiceConversionUtility.CreateTagToSendToService(tag));
         }
         
         public void UpdateTag(Tag tag)
         {
-            _client.UpdateTag(Utility.CreateTagToSendToService(tag));
+            _client.UpdateTag(ClientToServiceConversionUtility.CreateTagToSendToService(tag));
         }
         
         public void DeleteTag(Tag tag)

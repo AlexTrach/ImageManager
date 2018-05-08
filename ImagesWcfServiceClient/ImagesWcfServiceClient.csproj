@@ -58,7 +58,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceClient.cs" />
     <Compile Include="Models\Tag.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="Utilities\ServiceToClientConversionUtility.cs" />
+    <Compile Include="Utilities\ClientToServiceConversionUtility.cs" />
+    <Compile Include="Utilities\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
