@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using ImagesWcfServiceClient.Models;
-using ImagesWcfServiceClient.DatabaseUpdateNotificaionInfrastructure;
+using ImagesWcfServiceClient.DatabaseUpdateNotificationInfrastructure;
 
 namespace ImageManagerWpfClient
 {

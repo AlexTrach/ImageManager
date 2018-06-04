@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImagesWcfServiceClient;
 using ImagesWcfServiceClient.Models;
-using ImagesWcfServiceClient.DatabaseUpdateNotificaionInfrastructure;
+using ImagesWcfServiceClient.DatabaseUpdateNotificationInfrastructure;
 
 namespace ImageManagerWpfClient
 {

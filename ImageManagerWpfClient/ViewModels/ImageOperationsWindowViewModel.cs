@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
 using ImagesWcfServiceClient.Models;
-using ImagesWcfServiceClient.DatabaseUpdateNotificaionInfrastructure;
+using ImagesWcfServiceClient.DatabaseUpdateNotificationInfrastructure;
 
 namespace ImageManagerWpfClient
 {

@@ -49,9 +49,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseUpdateNotificaionInfrastructure\DatabaseUpdatedEventArgs.cs" />
-    <Compile Include="DatabaseUpdateNotificaionInfrastructure\EntityState.cs" />
-    <Compile Include="DatabaseUpdateNotificaionInfrastructure\EntityType.cs" />
+    <Compile Include="DatabaseUpdateNotificationInfrastructure\DatabaseUpdatedEventArgs.cs" />
+    <Compile Include="DatabaseUpdateNotificationInfrastructure\EntityState.cs" />
+    <Compile Include="DatabaseUpdateNotificationInfrastructure\EntityType.cs" />
     <Compile Include="IDatabaseUpdateListener.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="ImagesServiceCallback.cs" />
